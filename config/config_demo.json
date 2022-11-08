@@ -1,0 +1,21 @@
+{
+    "format_face_file":"",
+    "model_path":"",
+    "output_img_path":"",
+
+    "train_config":{
+        "Huggingface_Token":"",
+        "Session_Name":"",
+        "Resume_Training":false,
+        "Training_Steps":-1,
+        "Train_text_encoder_for":35
+    },
+    "deploy_config":{
+        "prompt":"",
+        "negative_prompt":"",
+        "sampling_method":"",
+        "width":"",
+        "height":""
+    }
+
+}

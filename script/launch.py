@@ -1,6 +1,7 @@
 import sys
 sys.path.append("/content/ai-travel/")
 from utils import install_xformers,downloadModel
+from stable_diffusion import dreamBooth
 import demjson
 import os
 
@@ -22,6 +23,7 @@ def main(argv):
     downloadModel()
 
     #模型训练
+    dreamBooth(param["train_config"]["Session_Name"],param["train_config"]["Session_Link_optional"],param["train_config"]["Contains_faces"],param["Huggingface_Token"])
 
     #生成图片
 

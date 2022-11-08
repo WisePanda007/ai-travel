@@ -1,1 +1,1 @@
-from utils.xformers import install_xformers
+from .xformers import install_xformers

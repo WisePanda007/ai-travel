@@ -25,4 +25,9 @@ def main(argv):
     #web页面
     print("\n成功运行\n")
 if __name__=="__main__":
-    main()
+    try:
+        main(sys.argv[1:])
+        sys.exit(0)
+    except Exception as e:
+        print(e)
+        sys.exit(1)

@@ -37,7 +37,7 @@ def install_xformers():
         os.system("pip install -q https://github.com/TheLastBen/fast-stable-diffusion/raw/main/precompiled/V100/xformers-0.0.13.dev0-py3-none-any.whl")
 
     elif (gpu=='A100'):
-        os.system("cd /usr/local/lib/python3.7/diffusers/models/")
+        os.chdir("""/usr/local/lib/python3.7/diffusers/models/")
         os.system("rm /usr/local/lib/python3.7/diffusers/models/attention.py")
         os.system("wget.download('https://raw.githubusercontent.com/huggingface/diffusers/269109dbfbbdbe2800535239b881e96e1828a0ef/src/diffusers/models/attention.py')")
         os.system("pip install -q https://github.com/TheLastBen/fast-stable-diffusion/raw/main/precompiled/A100/xformers-0.0.13.dev0-py3-none-any.whl")

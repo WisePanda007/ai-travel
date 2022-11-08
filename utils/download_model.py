@@ -11,7 +11,7 @@ from IPython.utils import capture
 def downloadModel(Huggingface_Token="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", Path_to_HuggingFace="nitrosocke/redshift-diffusion", CKPT_Path="", CKPT_Link="", Compatiblity_Mode=""):
 
     with capture.capture_output() as cap:
-        os.system("""cd /content/""")
+        os.chdir("""/content/""")
 
     if Path_to_HuggingFace != "":
         downloadmodel_hf(Huggingface_Token,Path_to_HuggingFace)
@@ -97,9 +97,9 @@ def downloadmodel(Huggingface_Token):
     if os.path.exists('/content/stable-diffusion-v1-5'):
         os.system("""rm -r /content/stable-diffusion-v1-5""")
 
-    os.system("""cd /content/""")
+    os.chdir("""/content/""")
     os.system("""mkdir /content/stable-diffusion-v1-5""")
-    os.system("""cd /content/stable-diffusion-v1-5""")
+    os.chdir(""" /content/stable-diffusion-v1-5""")
     os.system("""git init""")
     os.system("""git lfs install --system --skip-repo""")
     os.system(
@@ -118,7 +118,7 @@ def downloadmodel(Huggingface_Token):
         os.system("""sed -i 's@"trained_betas": null,@"trained_betas": null@g' /content/stable-diffusion-v1-5/scheduler/scheduler_config.json""")
         os.system(
             """sed -i 's@"sample_size": 256,@"sample_size": 512,@g' /content/stable-diffusion-v1-5/vae/config.json""")
-        os.system("""cd / content /""")
+        os.chdir("""/ content /""")
         print('[1;32mDONE !')
     else:
         while not os.path.exists('/content/stable-diffusion-v1-5'):
@@ -135,13 +135,12 @@ def downloadmodel_hf(Huggingface_Token,Path_to_HuggingFace):
     if os.path.exists('/content/stable-diffusion-v1-5'):
         os.system("""rm -r /content/stable-diffusion-v1-5""")
 
-    os.system("""cd /content/""")
+    os.chdir("""/content/""")
     os.system("""mkdir /content/stable-diffusion-v1-5""")
-    os.system("""cd /content/stable-diffusion-v1-5""")
+    os.chdir("""/content/stable-diffusion-v1-5""")
     os.system("""git init""")
     os.system("""git lfs install --system --skip-repo""")
-    os.system(
-        """git remote add -f origin "https://USER:{}@huggingface.co/{}" """.format(Huggingface_Token,Path_to_HuggingFace))
+    os.system("""git remote add -f origin "https://USER:{}@huggingface.co/{}" """.format(Huggingface_Token,Path_to_HuggingFace))
     os.system("""git config core.sparsecheckout true""")
     os.system("""echo -e "feature_extractor\nsafety_checker\nscheduler\ntext_encoder\ntokenizer\nunet\nmodel_index.json" > .git/info/sparse-checkout""")
     os.system("""git pull origin main""")
@@ -157,7 +156,7 @@ def downloadmodel_hf(Huggingface_Token,Path_to_HuggingFace):
         os.system("""sed -i 's@"trained_betas": null,@"trained_betas": null@g' /content/stable-diffusion-v1-5/scheduler/scheduler_config.json""")
         os.system(
             """sed -i 's@"sample_size": 256,@"sample_size": 512,@g' /content/stable-diffusion-v1-5/vae/config.json        """)
-        os.system("""cd /content/        """)
+        os.chdir("""/content/        """)
         print('[1;32mDONE !')
     else:
         while not os.path.exists('/content/stable-diffusion-v1-5/unet/diffusion_pytorch_model.bin'):

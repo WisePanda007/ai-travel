@@ -9,6 +9,8 @@ import os
 def main(argv):
     param = demjson.decode_file(argv[0] if len(argv) >= 1 else "config/config_demo.json")
 
+    print("1")
+
     #搭建环境
     install_xformers()
 

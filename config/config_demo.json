@@ -2,7 +2,7 @@
     "format_face_file":"",
     "model_path":"",
     "output_img_path":"",
-
+    
     "train_config":{
         "Huggingface_Token":"",
         "Session_Name":"",
@@ -17,5 +17,4 @@
         "width":"",
         "height":""
     }
-
 }

@@ -19,6 +19,6 @@ def main(argv):
     #生成图片
 
     #web页面
-
+    print("成功运行")
 if __name__=="__main__":
     main()

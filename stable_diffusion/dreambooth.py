@@ -143,6 +143,6 @@ def reg(Contains_faces,CLASS_DIR):
             os.system("""unzip Mixz""")
             os.system("""rm Menz Womenz Mixz""")
             os.system("""find . -name "* *" -type f | rename 's/ /_/g'""")
-            os.chdir("""/content       """)
+            os.chdir("""/content""")
 
 # @markdown - If you're training on a subject with a face or a movie/style that contains faces. (experimental, still needs some tuning)

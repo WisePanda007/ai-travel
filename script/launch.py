@@ -1,6 +1,6 @@
 import os
 import demjson
-from ai-travel.utils.env.xformers import install_xformers
+from utils.env.xformers import install_xformers
 
 
 def main(argv):

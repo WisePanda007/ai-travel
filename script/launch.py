@@ -9,7 +9,7 @@ def main(argv):
     #搭建环境
     os.system("sh ai-travel/utils/env/environment.sh")
     install_xformers()
-    
+
     #图片格式转换
 
     #模型训练
@@ -19,4 +19,4 @@ def main(argv):
     #web页面
 
 if name=="__main__":
-    main();
+    main()

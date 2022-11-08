@@ -11,7 +11,7 @@ def main(argv):
 
     param = demjson.decode_file(argv[0] if len(argv) >= 1 else "config/config_demo.json")
 
-    print("\n1\n")
+    print(param)
 
     #搭建环境
     install_xformers()

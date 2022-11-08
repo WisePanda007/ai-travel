@@ -99,7 +99,7 @@ def downloadmodel(Huggingface_Token):
 
     os.chdir("""/content/""")
     os.system("""mkdir /content/stable-diffusion-v1-5""")
-    os.chdir(""" /content/stable-diffusion-v1-5""")
+    os.chdir("""/content/stable-diffusion-v1-5""")
     os.system("""git init""")
     os.system("""git lfs install --system --skip-repo""")
     os.system(
@@ -118,7 +118,7 @@ def downloadmodel(Huggingface_Token):
         os.system("""sed -i 's@"trained_betas": null,@"trained_betas": null@g' /content/stable-diffusion-v1-5/scheduler/scheduler_config.json""")
         os.system(
             """sed -i 's@"sample_size": 256,@"sample_size": 512,@g' /content/stable-diffusion-v1-5/vae/config.json""")
-        os.chdir("""/ content /""")
+        os.chdir("""/content/""")
         print('[1;32mDONE !')
     else:
         while not os.path.exists('/content/stable-diffusion-v1-5'):
@@ -156,7 +156,7 @@ def downloadmodel_hf(Huggingface_Token,Path_to_HuggingFace):
         os.system("""sed -i 's@"trained_betas": null,@"trained_betas": null@g' /content/stable-diffusion-v1-5/scheduler/scheduler_config.json""")
         os.system(
             """sed -i 's@"sample_size": 256,@"sample_size": 512,@g' /content/stable-diffusion-v1-5/vae/config.json        """)
-        os.chdir("""/content/        """)
+        os.chdir("""/content/""")
         print('[1;32mDONE !')
     else:
         while not os.path.exists('/content/stable-diffusion-v1-5/unet/diffusion_pytorch_model.bin'):

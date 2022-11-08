@@ -141,6 +141,7 @@ def downloadmodel_hf(Huggingface_Token,Path_to_HuggingFace):
     os.system("""git init""")
     os.system("""git lfs install --system --skip-repo""")
     url="https://USER:{}@huggingface.co/{}".format(Huggingface_Token,Path_to_HuggingFace)
+    print(url)
     os.system(
         """git remote add -f origin """+url)
     os.system("""git config core.sparsecheckout true""")

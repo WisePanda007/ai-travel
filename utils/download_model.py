@@ -14,7 +14,7 @@ def downloadModel(Huggingface_Token="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", Pat
         os.system("""cd /content/""")
 
     if Path_to_HuggingFace != "":
-        downloadmodel_hf()
+        downloadmodel_hf(Huggingface_Token,Path_to_HuggingFace)
     elif CKPT_Path != "":
         if os.path.exists('/content/stable-diffusion-v1-5'):
             os.system("""rm -r /content/stable-diffusion-v1-5""")
@@ -103,13 +103,13 @@ def downloadmodel(Huggingface_Token):
     os.system("""git init""")
     os.system("""git lfs install --system --skip-repo""")
     os.system(
-        """git remote add -f origin    "https://USER:{token}@huggingface.co/runwayml/stable-diffusion-v1-5" """)
+        """git remote add -f origin    "https://USER:{}@huggingface.co/runwayml/stable-diffusion-v1-5" """.format(Huggingface_Token))
     os.system("""git config core.sparsecheckout true""")
     os.system("""echo -e "feature_extractor\nsafety_checker\nscheduler\ntext_encoder\ntokenizer\nunet\nmodel_index.json" > .git/info/sparse-checkout""")
     os.system("""git pull origin main""")
     if os.path.exists('/content/stable-diffusion-v1-5/unet/diffusion_pytorch_model.bin'):
         os.system(
-            """git clone "https://USER:{token}@huggingface.co/stabilityai/sd-vae-ft-mse" """)
+            """git clone "https://USER:{}@huggingface.co/stabilityai/sd-vae-ft-mse" """.format(Huggingface_Token))
         os.system(
             """mv /content/stable-diffusion-v1-5/sd-vae-ft-mse /content/stable-diffusion-v1-5/vae""")
         os.system("""rm -r /content/stable-diffusion-v1-5/.git""")
@@ -127,7 +127,7 @@ def downloadmodel(Huggingface_Token):
             time.sleep(5)
 
 
-def downloadmodel_hf():
+def downloadmodel_hf(Huggingface_Token,Path_to_HuggingFace):
     print("下载Huggingface模型2")
 
     if os.path.exists('/content/stable-diffusion-v1-5'):
@@ -139,13 +139,13 @@ def downloadmodel_hf():
     os.system("""git init""")
     os.system("""git lfs install --system --skip-repo""")
     os.system(
-        """git remote add -f origin    "https://USER:{token}@huggingface.co/{Path_to_HuggingFace}" """)
+        """git remote add -f origin    "https://USER:{}@huggingface.co/{}" """.format(Huggingface_Token,Path_to_HuggingFace))
     os.system("""git config core.sparsecheckout true""")
     os.system("""echo -e "feature_extractor\nsafety_checker\nscheduler\ntext_encoder\ntokenizer\nunet\nmodel_index.json" > .git/info/sparse-checkout""")
     os.system("""git pull origin main""")
     if os.path.exists('/content/stable-diffusion-v1-5/unet/diffusion_pytorch_model.bin'):
         os.system(
-            """git clone "https://USER:{token}@huggingface.co/stabilityai/sd-vae-ft-mse" """)
+            """git clone "https://USER:{}@huggingface.co/stabilityai/sd-vae-ft-mse" """.format(Huggingface_Token))
         os.system(
             """mv /content/stable-diffusion-v1-5/sd-vae-ft-mse /content/stable-diffusion-v1-5/vae""")
         os.system("""rm -r /content/stable-diffusion-v1-5/.git""")

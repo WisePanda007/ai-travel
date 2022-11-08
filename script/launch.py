@@ -7,6 +7,8 @@ import os
 
 
 def main(argv):
+    print("0")
+
     param = demjson.decode_file(argv[0] if len(argv) >= 1 else "config/config_demo.json")
 
     print("1")

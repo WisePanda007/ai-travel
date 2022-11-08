@@ -7,11 +7,11 @@ import os
 
 
 def main(argv):
-    print("0")
+    print("\n0\n")
 
     param = demjson.decode_file(argv[0] if len(argv) >= 1 else "config/config_demo.json")
 
-    print("1")
+    print("\n1\n")
 
     #搭建环境
     install_xformers()
@@ -23,6 +23,6 @@ def main(argv):
     #生成图片
 
     #web页面
-    print("成功运行")
+    print("\n成功运行\n")
 if __name__=="__main__":
     main()

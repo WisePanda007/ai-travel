@@ -128,7 +128,9 @@ def downloadmodel(Huggingface_Token):
 
 
 def downloadmodel_hf(Huggingface_Token,Path_to_HuggingFace):
+
     print("下载Huggingface模型2")
+    print(Huggingface_Token,Path_to_HuggingFace)
 
     if os.path.exists('/content/stable-diffusion-v1-5'):
         os.system("""rm -r /content/stable-diffusion-v1-5""")

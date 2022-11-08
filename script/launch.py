@@ -2,7 +2,7 @@ import os
 import sys
 sys.path.append("/content/ai-travel/")
 import demjson
-from utils.env.xformers import install_xformers
+from utils import install_xformers
 
 
 def main(argv):

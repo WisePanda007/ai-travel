@@ -1,1 +1,1 @@
-import .env
+from xformers import install_xformers

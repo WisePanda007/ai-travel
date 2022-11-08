@@ -1,6 +1,6 @@
 import sys
 sys.path.append("/content/ai-travel/")
-from utils import install_xformers
+from utils import install_xformers,downloadModel
 import demjson
 import os
 
@@ -17,6 +17,9 @@ def main(argv):
     install_xformers()
 
     #图片格式转换
+
+    #下载模型
+    downloadModel()
 
     #模型训练
 

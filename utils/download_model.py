@@ -5,7 +5,7 @@ from IPython.utils import capture
 with capture.capture_output() as cap:
     os.chdir("""/content/""")
 
-Huggingface_Token = ""  # @param {type:"string"}
+Huggingface_Token = "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"  # @param {type:"string"}
 token = Huggingface_Token
 
 

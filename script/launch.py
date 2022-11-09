@@ -3,7 +3,7 @@ sys.path.append("/content/ai-travel/")
 # from stable_diffusion import dreamBooth
 import demjson
 import os
-from utils import install_xformers, downloadModel
+from utils import install_xformers
 
 def main(argv):
     print("\n0\n")

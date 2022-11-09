@@ -1,4 +1,4 @@
-#@markdown # xformers
+# @markdown # xformers
 
 from subprocess import getoutput
 from IPython.display import HTML
@@ -19,28 +19,29 @@ def install_xformers():
         gpu = 'A100'
 
     while True:
-        try: 
-            gpu=='T4'or gpu=='P100'or gpu=='V100'or gpu=='A100'
+        try:
+            gpu == 'T4' or gpu == 'P100' or gpu == 'V100' or gpu == 'A100'
             break
         except:
             pass
         print('[1;31mit seems that your GPU is not supported at the moment')
         time.sleep(5)
 
-    if (gpu=='T4'):
-        os.system("pip install -q https://github.com/TheLastBen/fast-stable-diffusion/raw/main/precompiled/T4/xformers-0.0.13.dev0-py3-none-any.whl")
-    
-    elif (gpu=='P100'):
-        os.system("pip install -q https://github.com/TheLastBen/fast-stable-diffusion/raw/main/precompiled/P100/xformers-0.0.13.dev0-py3-none-any.whl")
+    if (gpu == 'T4'):
+        os.system("""pip install -q https://github.com/TheLastBen/fast-stable-diffusion/raw/main/precompiled/T4/xformers-0.0.13.dev0-py3-none-any.whl""")
 
-    elif (gpu=='V100'):
-        os.system("pip install -q https://github.com/TheLastBen/fast-stable-diffusion/raw/main/precompiled/V100/xformers-0.0.13.dev0-py3-none-any.whl")
+    elif (gpu == 'P100'):
+        os.system("""pip install -q https://github.com/TheLastBen/fast-stable-diffusion/raw/main/precompiled/P100/xformers-0.0.13.dev0-py3-none-any.whl""")
 
-    elif (gpu=='A100'):
-        os.chdir("""/usr/local/lib/python3.7/diffusers/models/""")
-        os.system("rm /usr/local/lib/python3.7/diffusers/models/attention.py")
-        os.system("wget.download('https://raw.githubusercontent.com/huggingface/diffusers/269109dbfbbdbe2800535239b881e96e1828a0ef/src/diffusers/models/attention.py')")
-        os.system("pip install -q https://github.com/TheLastBen/fast-stable-diffusion/raw/main/precompiled/A100/xformers-0.0.13.dev0-py3-none-any.whl")
+    elif (gpu == 'V100'):
+        os.system("""pip install -q https://github.com/TheLastBen/fast-stable-diffusion/raw/main/precompiled/V100/xformers-0.0.13.dev0-py3-none-any.whl""")
+
+    elif (gpu == 'A100'):
+        os.chdir("""cd /usr/local/lib/python3.7/diffusers/models/""")
+        os.system("""rm /usr/local/lib/python3.7/diffusers/models/attention.py""")
+        wget.download(
+            'https://raw.githubusercontent.com/huggingface/diffusers/269109dbfbbdbe2800535239b881e96e1828a0ef/src/diffusers/models/attention.py')
+        os.system("""pip install -q https://github.com/TheLastBen/fast-stable-diffusion/raw/main/precompiled/A100/xformers-0.0.13.dev0-py3-none-any.whl""")
 
     clear_output()
     print('[1;32mDONE !')

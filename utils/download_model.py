@@ -8,13 +8,16 @@ from IPython.utils import capture
 # @markdown ---
 
 
-def downloadModel(Huggingface_Token="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", Path_to_HuggingFace="nitrosocke/redshift-diffusion", CKPT_Path="", CKPT_Link="", Compatiblity_Mode=""):
-
+def downloadModel(Huggingface_Token="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", Path_to_HuggingFace="", CKPT_Path="", CKPT_Link="", Compatiblity_Mode=""):
+    print("开始下载模型")
     with capture.capture_output() as cap:
         os.chdir("""/content/""")
 
+    token = Huggingface_Token
+
     if Path_to_HuggingFace != "":
-        downloadmodel_hf(Huggingface_Token,Path_to_HuggingFace)
+        downloadmodel_hf(Huggingface_Token, Path_to_HuggingFace)
+
     elif CKPT_Path != "":
         if os.path.exists('/content/stable-diffusion-v1-5'):
             os.system("""rm -r /content/stable-diffusion-v1-5""")
@@ -22,13 +25,13 @@ def downloadModel(Huggingface_Token="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", Pat
             os.system("""mkdir /content/stable-diffusion-v1-5""")
             with capture.capture_output() as cap:
                 if Compatiblity_Mode:
-                    os.system("""wget https://raw.githubusercontent.com/huggingface/diffusers/039958eae55ff0700cfb42a7e72739575ab341f1/scripts/convert_original_stable_diffusion_to_diffusers.py """)
+                    os.system("""wget https://raw.githubusercontent.com/huggingface/diffusers/039958eae55ff0700cfb42a7e72739575ab341f1/scripts/convert_original_stable_diffusion_to_diffusers.py""")
                     os.system(
-                        """python /content/convert_original_stable_diffusion_to_diffusers.py --checkpoint_path "$CKPT_Path" --dump_path /content/stable-diffusion-v1-5 """)
+                        """python /content/convert_original_stable_diffusion_to_diffusers.py --checkpoint_path {} --dump_path /content/stable-diffusion-v1-5""".format(CKPT_Path))
                     os.system(
                         """rm /content/convert_original_stable_diffusion_to_diffusers.py""")
                 else:
-                    os.system("""python /content/diffusers/scripts/convert_original_stable_diffusion_to_diffusers.py --checkpoint_path "$CKPT_Path" --dump_path /content/stable-diffusion-v1-5    """)
+                    os.system("""python /content/diffusers/scripts/convert_original_stable_diffusion_to_diffusers.py --checkpoint_path {} --dump_path /content/stable-diffusion-v1-5""".format(CKPT_Path))
             if os.path.exists('/content/stable-diffusion-v1-5/unet/diffusion_pytorch_model.bin'):
                 os.system("""rm /content/v1-inference.yaml""")
                 print('[1;32mDONE !')
@@ -49,8 +52,8 @@ def downloadModel(Huggingface_Token="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", Pat
 
     elif CKPT_Link != "":
         if os.path.exists('/content/stable-diffusion-v1-5'):
-            os.system("""rm -r /content/stable-diffusion-v1-5     """)
-        os.system("""gdown --fuzzy $CKPT_Link -O model.ckpt        """)
+            os.system("""rm -r /content/stable-diffusion-v1-5""")
+        os.system("""gdown --fuzzy {} -O model.ckpt""".format(CKPT_Link))
         if os.path.exists('/content/model.ckpt'):
             if os.path.getsize("/content/model.ckpt") > 1810671599:
                 os.system("""mkdir /content/stable-diffusion-v1-5""")
@@ -61,7 +64,7 @@ def downloadModel(Huggingface_Token="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", Pat
                         os.system(
                             """python /content/convert_original_stable_diffusion_to_diffusers.py --checkpoint_path /content/model.ckpt --dump_path /content/stable-diffusion-v1-5""")
                         os.system(
-                            """rm /content/convert_original_stable_diffusion_to_diffusers.py         """)
+                            """rm /content/convert_original_stable_diffusion_to_diffusers.py""")
                     else:
                         os.system(
                             """python /content/diffusers/scripts/convert_original_stable_diffusion_to_diffusers.py --checkpoint_path /content/model.ckpt --dump_path /content/stable-diffusion-v1-5""")
@@ -102,14 +105,13 @@ def downloadmodel(Huggingface_Token):
     os.chdir("""/content/stable-diffusion-v1-5""")
     os.system("""git init""")
     os.system("""git lfs install --system --skip-repo""")
-    os.system(
-        """git remote add -f origin    "https://USER:{}@huggingface.co/runwayml/stable-diffusion-v1-5" """.format(Huggingface_Token))
+    os.system("""git remote add -f origin  "https://USER:{}@huggingface.co/runwayml/stable-diffusion-v1-5" """.format(token))
     os.system("""git config core.sparsecheckout true""")
     os.system("""echo -e "feature_extractor\nsafety_checker\nscheduler\ntext_encoder\ntokenizer\nunet\nmodel_index.json" > .git/info/sparse-checkout""")
     os.system("""git pull origin main""")
     if os.path.exists('/content/stable-diffusion-v1-5/unet/diffusion_pytorch_model.bin'):
         os.system(
-            """git clone "https://USER:{}@huggingface.co/stabilityai/sd-vae-ft-mse" """.format(Huggingface_Token))
+            """git clone "https://USER:{}@huggingface.co/stabilityai/sd-vae-ft-mse" """.format(token))
         os.system(
             """mv /content/stable-diffusion-v1-5/sd-vae-ft-mse /content/stable-diffusion-v1-5/vae""")
         os.system("""rm -r /content/stable-diffusion-v1-5/.git""")
@@ -127,10 +129,9 @@ def downloadmodel(Huggingface_Token):
             time.sleep(5)
 
 
-def downloadmodel_hf(Huggingface_Token,Path_to_HuggingFace):
+def downloadmodel_hf(Huggingface_Token, Path_to_HuggingFace):
 
-    print("下载Huggingface模型2")
-    print(Huggingface_Token,Path_to_HuggingFace)
+    print("下载Huggingface模型,使用Path_to_HuggingFace")
 
     if os.path.exists('/content/stable-diffusion-v1-5'):
         os.system("""rm -r /content/stable-diffusion-v1-5""")
@@ -140,14 +141,14 @@ def downloadmodel_hf(Huggingface_Token,Path_to_HuggingFace):
     os.chdir("""/content/stable-diffusion-v1-5""")
     os.system("""git init""")
     os.system("""git lfs install --system --skip-repo""")
-    os.system("""git remote add -f origin "https://USER:{}@huggingface.co/{}" """.format(Huggingface_Token,Path_to_HuggingFace))
+    os.system("""git remote add -f origin  "https://USER:{}@huggingface.co/{}" """.format(
+        Huggingface_Token, Path_to_HuggingFace))
     os.system("""git config core.sparsecheckout true""")
-    os.system("""echo -e "feature_extractor\nsafety_checker\nscheduler\ntext_encoder\ntokenizer\nunet\nmodel_index.json" > .git/info/sparse-checkout""")
+    os.system("""echo -e "scheduler\ntext_encoder\ntokenizer\nunet\nmodel_index.json" > .git/info/sparse-checkout""")
     os.system("""git pull origin main""")
-    print(os.getcwd())
     if os.path.exists('/content/stable-diffusion-v1-5/unet/diffusion_pytorch_model.bin'):
         os.system(
-            """git clone \"https://USER:{}@huggingface.co/stabilityai/sd-vae-ft-mse\" """.format(Huggingface_Token))
+            """git clone "https://USER:{}@huggingface.co/stabilityai/sd-vae-ft-mse" """.format(Huggingface_Token))
         os.system(
             """mv /content/stable-diffusion-v1-5/sd-vae-ft-mse /content/stable-diffusion-v1-5/vae""")
         os.system("""rm -r /content/stable-diffusion-v1-5/.git""")
@@ -155,7 +156,7 @@ def downloadmodel_hf(Huggingface_Token,Path_to_HuggingFace):
             """sed -i 's@"clip_sample": false@@g' /content/stable-diffusion-v1-5/scheduler/scheduler_config.json""")
         os.system("""sed -i 's@"trained_betas": null,@"trained_betas": null@g' /content/stable-diffusion-v1-5/scheduler/scheduler_config.json""")
         os.system(
-            """sed -i 's@"sample_size": 256,@"sample_size": 512,@g' /content/stable-diffusion-v1-5/vae/config.json        """)
+            """sed -i 's@"sample_size": 256,@"sample_size": 512,@g' /content/stable-diffusion-v1-5/vae/config.json""")
         os.chdir("""/content/""")
         print('[1;32mDONE !')
     else:

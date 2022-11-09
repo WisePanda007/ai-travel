@@ -12,6 +12,7 @@ def install_xformers():
         gpu = 'P100'
     elif 'V100' in s:
         gpu = 'V100'
+    print("GPU版本:"+gpu)
 
     while True:
         try:
@@ -23,7 +24,6 @@ def install_xformers():
         time.sleep(5)
 
     if (gpu == 'T4'):
-        print("开始安装GPU")
         os.system(
             """pip install -q https://github.com/TheLastBen/fast-stable-diffusion/raw/main/precompiled/T4/xformers-0.0.13.dev0-py3-none-any.whl""")
 

@@ -183,7 +183,7 @@ def dreamBooth(Session_Name="", Session_Link_optional="", Contains_faces="No", H
         os.system("""zip -r instance_images instance_images""")
         os.chdir("""/content""")
     print("DreamBooth构建完成")
-
+    return(MODEL_NAME,resume,Contains_faces)
 
 
 def fdownloadmodel(Huggingface_Token):

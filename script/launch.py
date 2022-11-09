@@ -19,7 +19,7 @@ def main(argv):
     # 图片格式转换
 
     # 选择/下载模型
-    # downloadModel()
+    downloadModel()
 
     # 设置DreamBooth
     dreamBooth(param["dream_config"]["Session_Name"], param["dream_config"]["Session_Link_optional"],

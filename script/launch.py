@@ -1,11 +1,9 @@
 import sys
-
-from utils.download_model import DownloadModel
-
 sys.path.append("/content/ai-travel/")
 import demjson
 import os
 from utils.xformers import Xformers
+from utils.download_model import DownloadModel
 
 
 def main(argv):

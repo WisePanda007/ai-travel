@@ -9,7 +9,7 @@ def main(argv):
     print("\n0\n")
 
     param = demjson.decode_file(argv[0] if len(
-        argv) >= 1 else "config/config_demo.json")
+        argv) >= 1 else "ai-travel/config/config_demo.json")
 
     print(param)
 

@@ -1,6 +1,6 @@
 import sys
 sys.path.append("/content/ai-travel/")
-from stable_diffusion import dreamBooth
+# from stable_diffusion import dreamBooth
 import demjson
 import os
 from utils import install_xformers, downloadModel

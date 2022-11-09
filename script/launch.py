@@ -21,11 +21,11 @@ def main(argv):
     # 选择/下载模型
     downloadModel()
 
-    # 设置DreamBooth
-    dreamBooth(param["dream_config"]["Session_Name"], param["dream_config"]["Session_Link_optional"],
-               param["dream_config"]["Contains_faces"], param["Huggingface_Token"],
-               param["dream_config"]["Remove_existing_instance_images"], param["dream_config"]["IMAGES_FOLDER_OPTIONAL"],
-               param["dream_config"]["Crop_images"], param["dream_config"]["Crop_size"])
+    # # 设置DreamBooth
+    # dreamBooth(param["dream_config"]["Session_Name"], param["dream_config"]["Session_Link_optional"],
+    #            param["dream_config"]["Contains_faces"], param["Huggingface_Token"],
+    #            param["dream_config"]["Remove_existing_instance_images"], param["dream_config"]["IMAGES_FOLDER_OPTIONAL"],
+    #            param["dream_config"]["Crop_images"], param["dream_config"]["Crop_size"])
 
     # 模型训练
 

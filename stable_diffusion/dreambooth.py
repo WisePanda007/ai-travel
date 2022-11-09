@@ -100,7 +100,7 @@ def dreamBooth(Session_Name="", Session_Link_optional="", Contains_faces="No", H
             os.system("""rm -r {}""".format(INSTANCE_DIR))
 
     if not os.path.exists(str(INSTANCE_DIR)):
-        os.system("""mkdir -p """.format(INSTANCE_DIR))
+        os.system("""mkdir -p {}""".format(INSTANCE_DIR))
 
     while IMAGES_FOLDER_OPTIONAL != "" and not os.path.exists(str(IMAGES_FOLDER_OPTIONAL)):
         print('[1;31mThe image folder specified does not exist, use the colab file explorer to copy the path :')

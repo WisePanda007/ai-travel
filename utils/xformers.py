@@ -3,7 +3,6 @@ from IPython.display import clear_output
 import time
 import os
 
-
 def install_xformers():
     s = getoutput('nvidia-smi')
     if 'T4' in s:

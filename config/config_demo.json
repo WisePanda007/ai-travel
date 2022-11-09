@@ -2,16 +2,25 @@
     "format_face_file":"",
     "model_path":"",
     "output_img_path":"",
+    
     "Huggingface_Token":"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",
     
-    "train_config":{
+    "dream_config":{
         "Session_Name":"test",
         "Session_Link_optional":"",
-        "Contains_faces":"",
+        "Contains_faces":"No",
+        "Remove_existing_instance_images":true,
+        "IMAGES_FOLDER_OPTIONAL":"/content/gdrive/MyDrive/img/ziyounvshen",
+        "Crop_images":true,
+        "Crop_size":512
+    },
+
+    "train_config":{
         "Resume_Training":false,
         "Training_Steps":-1,
         "Train_text_encoder_for":35
     },
+
     "deploy_config":{
         "prompt":"",
         "negative_prompt":"",

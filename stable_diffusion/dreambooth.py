@@ -10,6 +10,7 @@ from PIL import Image
 
 
 def dreamBooth(Session_Name="", Session_Link_optional="", Contains_faces="No", Huggingface_Token="", Remove_existing_instance_images=True, IMAGES_FOLDER_OPTIONAL="", Crop_images=True, Crop_size=512):
+    print("开始构建DreamBooth")
     MODEL_NAME = "/content/stable-diffusion-v1-5"
     PT = ""
 
@@ -181,6 +182,8 @@ def dreamBooth(Session_Name="", Session_Link_optional="", Contains_faces="No", H
         os.system("""rm instance_images.zip""")
         os.system("""zip -r instance_images instance_images""")
         os.chdir("""/content""")
+    print("DreamBooth构建完成")
+
 
 
 def fdownloadmodel(Huggingface_Token):

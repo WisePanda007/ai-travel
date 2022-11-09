@@ -1,9 +1,10 @@
 import sys
+
 sys.path.append("/content/ai-travel/")
-# from stable_diffusion import dreamBooth
 import demjson
 import os
-from utils import install_xformers
+from utils.xformers import Xformers
+
 
 def main(argv):
     print("\n0\n")
@@ -14,12 +15,11 @@ def main(argv):
     print(param)
 
     # 搭建环境
-    install_xformers()
+    s = Xformers(param)
 
     # 图片格式转换
 
     # 选择/下载模型
-    downloadModel()
 
     # # 设置DreamBooth
     # dreamBooth(param["dream_config"]["Session_Name"], param["dream_config"]["Session_Link_optional"],

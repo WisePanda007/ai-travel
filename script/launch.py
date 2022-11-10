@@ -22,6 +22,8 @@ def main(argv):
     # 选择/下载模型
     d=DownloadModel(param)
 
+    db=DreamBooth()
+
     # # 设置DreamBooth
     # dreamBooth(param["dream_config"]["Session_Name"], param["dream_config"]["Session_Link_optional"],
     #            param["dream_config"]["Contains_faces"], param["Huggingface_Token"],

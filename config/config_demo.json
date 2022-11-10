@@ -2,9 +2,10 @@
     "format_face_file":"",
     "model_path":"",
     "output_img_path":"",
-
+    
     "Huggingface_Token":"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",
     
+    "dream_config":{
         "Session_Name":"test",
         "Session_Link_optional":"",
         "Contains_faces":"No",
@@ -12,6 +13,7 @@
         "IMAGES_FOLDER_OPTIONAL":"/content/gdrive/MyDrive/img/ziyounvshen",
         "Crop_images":true,
         "Crop_size":512
+    },
 
     "train_config":{
         "Resume_Training":false,

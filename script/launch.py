@@ -22,7 +22,7 @@ def main(argv):
     # 选择/下载模型
     d=DownloadModel(param)
 
-    db=DreamBooth()
+    db=DreamBooth(param)
 
     # # 设置DreamBooth
     # dreamBooth(param["dream_config"]["Session_Name"], param["dream_config"]["Session_Link_optional"],

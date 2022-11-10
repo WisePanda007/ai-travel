@@ -7,7 +7,7 @@ from utils.download_model import DownloadModel
 
 
 def main(argv):
-    print("\n0\n")
+    print("开始运行")
 
     param = demjson.decode_file(argv[0] if len(
         argv) >= 1 else "ai-travel/config/config_demo.json")

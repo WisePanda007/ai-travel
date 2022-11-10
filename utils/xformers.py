@@ -19,7 +19,7 @@ class Xformers():
             gpu = 'V100'
         elif 'A100' in s:
             gpu = 'A100'
-
+        print("GPU:",gpu)
         while True:
             try:
                 gpu == 'T4' or gpu == 'P100' or gpu == 'V100' or gpu == 'A100'

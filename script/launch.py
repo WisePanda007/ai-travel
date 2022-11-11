@@ -18,18 +18,6 @@ def main(argv):
 
     print(param)
     training_param = param["data"]["training_params"]
-    original_album_param = param["data"]["original_album"]
-    original_album_param = [{'url': 'https://community.mafengwo.net/mfs/s19/M00/A1/08/CoNCfmNqCGNX91KiAAAOpAKr1LE.jpeg',
-                             'name': 'elonmuskmfwailab'},
-                            {'url': 'https://community.mafengwo.net/mfs/s19/M00/FD/07/CoNE4WNqCGNLs833AAATie9uH0I.jpeg',
-                             'name': 'elonmuskmfwailab'},
-                            {'url': 'https://community.mafengwo.net/mfs/s19/M00/A5/EC/CoNBHGNqCGMC1-f8AAAerrl_Opg.jpeg',
-                             'name': 'elonmuskmfwailab'},
-                            {'url': 'https://community.mafengwo.net/mfs/s19/M00/F3/FB/CoNBdGNqCGN7sBpeAAAWupoKt_I.jpeg',
-                             'name': 'elonmuskmfwailab'},
-                            {'url': 'https://community.mafengwo.net/mfs/s19/M00/B0/29/CoNJ72NqCGMxcxtVAAAQ7s0KY-Q.jpeg',
-                             'name': 'elonmuskmfwailab'}]
-
 
     # 搭建环境
     x = Xformers(training_param)

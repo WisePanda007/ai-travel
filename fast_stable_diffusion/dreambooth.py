@@ -180,7 +180,7 @@ class DreamBooth():
 
         IMAGES_FOLDER_OPTIONAL = path  # @param{type: 'string'}
 
-        Crop_images = param["Crop_Images"]  # @param{type: 'boolean'}
+        Crop_images = True if param["Crop_Images"]=="true" else False # @param{type: 'boolean'}
         Crop_size = 512  # @param{type: 'number'}
 
         # @markdown - Unless you want to crop them manually in a precise way, you don't need to crop your instance images externally.
@@ -251,7 +251,8 @@ class DreamBooth():
 
         MODELT_NAME = MODEL_NAME
 
-        Training_Steps = param["Training_Steps"]  # @param{type: 'number'}
+        Training_Steps = int(param["Training_Steps"])  # @param{type: 'number'}
+        Training_Steps=100
         # @markdown - Total Steps = Number of Instance images * 200, if you use 30 images, use 6000 steps, if you're not satisfied with the result, resume training for another 500 steps, and so on ...
 
         Seed = ''  # @param{type: 'string'}

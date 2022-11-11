@@ -175,8 +175,8 @@ class DreamBooth():
             img_path = path + str(name) + '(' + str(count) + ')' + '.jpeg'
             os.system('wget "{}" -O "{}"'.format(url, img_path))
             img = Image.open(img_path)
-            img.save(img_path.rstrip(".jpeg")+".jpg", "JPEG", quality=72, optimize=True, progressive=True)
-            os.system("rm -rf "+img_path)
+            img.save(img_path.rstrip(".jpeg")+".jpg", "JPEG", quality=100, optimize=True, progressive=True)
+            os.system('rm -rf "{}"'.format(img_path))
 
         IMAGES_FOLDER_OPTIONAL = path  # @param{type: 'string'}
 
@@ -221,48 +221,12 @@ class DreamBooth():
             print('[1;32mDone, proceed to the training cell')
 
 
-        # elif IMAGES_FOLDER_OPTIONAL == "":
-        #     uploaded = files.upload()
-        #     if Crop_images:
-        #         for filename in uploaded.keys():
-        #             shutil.move(filename, INSTANCE_DIR)
-        #             extension = filename.split(".")[1]
-        #             identifier = filename.split(".")[0]
-        #             new_path_with_file = os.path.join(INSTANCE_DIR, filename)
-        #             file = Image.open(new_path_with_file)
-        #             width, height = file.size
-        #             side_length = min(width, height)
-        #             left = (width - side_length) / 2
-        #             top = (height - side_length) / 2
-        #             right = (width + side_length) / 2
-        #             bottom = (height + side_length) / 2
-        #             image = file.crop((left, top, right, bottom))
-        #             image = image.resize((Crop_size, Crop_size))
-        #             if (extension.upper() == "JPG"):
-        #                 image.save(new_path_with_file, format="JPEG", quality=100)
-        #             else:
-        #                 image.save(new_path_with_file, format=extension.upper())
-        #     else:
-        #         for filename in uploaded.keys():
-        #             shutil.move(filename, INSTANCE_DIR)
-        #
-        #     with capture.capture_output() as cap:
-        #         os.chdir(INSTANCE_DIR)
-        #         os.system("""find . -name "* *" -type f | rename 's/ /_/g'""")
-        #         os.chdir("""/content""")
-        #         if os.path.exists(INSTANCE_DIR + "/.ipynb_checkpoints"):
-        #             os.system("""rm -r """ + INSTANCE_DIR + "/.ipynb_checkpoints")
-        #     print('[1;32mDone, proceed to the training cell')
-
         with capture.capture_output() as cap:
             os.chdir(SESSION_DIR)
             os.system("""rm instance_images.zip""")
             os.system("""zip -r instance_images instance_images""")
             os.chdir("""/content""")
 
-        # @markdown ---
-        # @markdown #Start DreamBooth
-        # @markdown ---
         import os
         from subprocess import getoutput
         from IPython.display import HTML

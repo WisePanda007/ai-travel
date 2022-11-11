@@ -304,10 +304,8 @@ class DreamBooth():
             prec = "no"
 
         s = getoutput('nvidia-smi')
-        if 'A100' in s:
-            precision = "no"
-        else:
-            precision = prec
+
+        precision = prec
 
         try:
             resume
@@ -484,12 +482,7 @@ class DreamBooth():
             os.chdir("""/content""")
             os.system(
                 """wget -O convertosd.py https://github.com/TheLastBen/fast-stable-diffusion/raw/main/Dreambooth/convertosd.py""")
-            if precision == "no":
-                os.system("""sed -i '226s@.*@@' /content/convertosd.py""")
-            os.system("""sed -i '201s@.*@    model_path = "{OUTPUT_DIR}"@' /content/convertosd.py""")
-            os.system(
-                """sed -i '202s@.*@    checkpoint_path= "{SESSION_DIR}/{Session_Name}.ckpt"@' /content/convertosd.py""")
-            os.system("""python /content/convertosd.py""")
+            os.system("""python /content/ai-travel/fast_stable_diffusion/convertosd.py {} {} {}""".format(OUTPUT_DIR,SESSION_DIR,Session_Name))
             if os.path.exists(SESSION_DIR + "/" + INSTANCE_NAME + '.ckpt'):
                 if not os.path.exists(str(SESSION_DIR + '/tokenizer')):
                     os.system("""cp -R '/content/models/{}/tokenizer' {}""".format(INSTANCE_NAME, SESSION_DIR))

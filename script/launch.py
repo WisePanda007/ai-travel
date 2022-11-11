@@ -14,6 +14,7 @@ def main(argv):
     param = demjson.decode_file("ai-travel/config/config_demo.json")
 
     if len(argv) >= 1:
+        print("传入参数")
         param = demjson.decode(urllib.request.urlopen(argv[0]).read())
 
     print(param)

@@ -93,17 +93,12 @@ def img_recog_judge(img_url, count, id_name):
             cv2.imwrite(image_save_path, cropped)
             return 0
 
-# 从接口获取参数
-# url = 'https://www.mafengwo.cn/community/api/ai/painting?id=1'
-# result = requests.get(url=url)
-# result = requests.post(url=url,verify=False)
-data = test_json.get('data')
-id_name = data.get('id')
-os.mkdir('./'+str(id_name))
+
+def crop_imgs():
+
 original_album = data.get('original_album')
 count = 0
 for photo in original_album:
     img_recog_judge(photo, count, id_name)
     count += 1
     
-print('end')

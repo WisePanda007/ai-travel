@@ -173,7 +173,7 @@ class DreamBooth():
             path = '/content/original_album/' + str(name) + '/'
             os.system("mkdir -p " + path)
             img_path = path + str(name) + '(' + str(count) + ')' + '.jpg'
-            os.system("wget {} -O {}".format(url, img_path))
+            os.system('wget "{}" -O "{}"'.format(url, img_path))
 
         IMAGES_FOLDER_OPTIONAL = path  # @param{type: 'string'}
 

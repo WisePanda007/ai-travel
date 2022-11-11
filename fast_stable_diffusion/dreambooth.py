@@ -1,6 +1,6 @@
 # @markdown #Create/Load a Session
 class DreamBooth():
-    def __init__(self, param):
+    def __init__(self, param, original_album_param):
         import os
         from IPython.display import clear_output
         from IPython.utils import capture
@@ -32,7 +32,7 @@ class DreamBooth():
 
         Captionned_instance_images = True
 
-        Session_Name = "learn"  # @param{type: 'string'}
+        Session_Name = param["Session_Name"]  # @param{type: 'string'}
         while Session_Name == "":
             print('[1;31mInput the Session Name:')
             Session_Name = input('')
@@ -158,14 +158,7 @@ class DreamBooth():
         from google.colab import files
         from PIL import Image
 
-        # @markdown #Instance Images
-        # @markdown ----
-
-        # @markdown
-        # @markdown - Run the cell to Upload the instance pictures.
-
         Remove_existing_instance_images = True  # @param{type: 'boolean'}
-        # @markdown - Uncheck the box to keep the existing instance images.
 
         if Remove_existing_instance_images:
             if os.path.exists(str(INSTANCE_DIR)):
@@ -174,11 +167,15 @@ class DreamBooth():
         if not os.path.exists(str(INSTANCE_DIR)):
             os.system("""mkdir -p """ + INSTANCE_DIR)
 
-        IMAGES_FOLDER_OPTIONAL = "/content/gdrive/MyDrive/img/ziyounvshen"  # @param{type: 'string'}
+        for count, i in enumerate(original_album_param):
+            url = i["url"]
+            name = i["name"]
+            path = '/content/original_album/' + str(name) + '/' + str(name) + '(' + str(count) + ')' + '.jpg'
+            os.system("wget {} {}".format(url, path))
 
-        # @markdown - If you prefer to specify directly the folder of the pictures instead of uploading, this will add the pictures to the existing (if any) instance images. Leave EMPTY to upload.
+        IMAGES_FOLDER_OPTIONAL = "/content/original_album/" +name # @param{type: 'string'}
 
-        Crop_images = True  # @param{type: 'boolean'}
+        Crop_images = param["Crop_Images"]  # @param{type: 'boolean'}
         Crop_size = 512  # @param{type: 'number'}
 
         # @markdown - Unless you want to crop them manually in a precise way, you don't need to crop your instance images externally.
@@ -285,7 +282,7 @@ class DreamBooth():
 
         MODELT_NAME = MODEL_NAME
 
-        Training_Steps = 100  # @param{type: 'number'}
+        Training_Steps = param["Training_Steps"]  # @param{type: 'number'}
         # @markdown - Total Steps = Number of Instance images * 200, if you use 30 images, use 6000 steps, if you're not satisfied with the result, resume training for another 500 steps, and so on ...
 
         Seed = ''  # @param{type: 'string'}
@@ -340,13 +337,13 @@ class DreamBooth():
         except:
             Contain_f = Contains_faces
 
-        Enable_text_encoder_training = True  # @param{type: 'boolean'}
+        Enable_text_encoder_training = param["Enable_Text_Encoder_Training"]  # @param{type: 'boolean'}
 
         # @markdown - At least 10% of the total training steps are needed, it doesn't matter if they are at the beginning or in the middle or the end, in case you're training the model multiple times.
         # @markdown - For example you can devide 5%, 5%, 5% on 3 training runs on the model, or 0%, 0%, 15%, given that 15% will cover the total training steps count (15% of 200 steps is not enough).
 
         # @markdown - Enter the % of the total steps for which to train the text_encoder
-        Train_text_encoder_for = 35  # @param{type: 'number'}
+        Train_text_encoder_for = param["Train_Text_Encoder_For"]  # @param{type: 'number'}
 
         # @markdown - Keep the % low for better style transfer, more training steps will be necessary for good results.
         # @markdown - Higher % will give more weight to the instance, it gives stronger results at lower steps count, but harder to stylize,
@@ -480,7 +477,9 @@ class DreamBooth():
         if os.path.exists('/content/models/' + INSTANCE_NAME + '/unet/diffusion_pytorch_model.bin'):
             print("Almost done ...")
             os.chdir("""/content""")
-            os.system("""python /content/ai-travel/fast_stable_diffusion/convertosd.py {} {} {}""".format(OUTPUT_DIR,SESSION_DIR,Session_Name))
+            os.system("""python /content/ai-travel/fast_stable_diffusion/convertosd.py {} {} {}""".format(OUTPUT_DIR,
+                                                                                                          SESSION_DIR,
+                                                                                                          Session_Name))
             if os.path.exists(SESSION_DIR + "/" + INSTANCE_NAME + '.ckpt'):
                 if not os.path.exists(str(SESSION_DIR + '/tokenizer')):
                     os.system("""cp -R '/content/models/{}/tokenizer' {}""".format(INSTANCE_NAME, SESSION_DIR))

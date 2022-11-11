@@ -170,10 +170,12 @@ class DreamBooth():
         for count, i in enumerate(original_album_param):
             url = i["url"]
             name = i["name"]
-            path = '/content/original_album/' + str(name) + '/' + str(name) + '(' + str(count) + ')' + '.jpg'
-            os.system("wget {} {}".format(url, path))
+            path = '/content/original_album/' + str(name) + '/'
+            os.system("mkdir -p "+path)
+            img_path=path+ str(name) + '(' + str(count) + ')' + '.jpg'
+            os.system("wget {} {}".format(url, img_path))
 
-        IMAGES_FOLDER_OPTIONAL = "/content/original_album/" +name # @param{type: 'string'}
+        IMAGES_FOLDER_OPTIONAL = path# @param{type: 'string'}
 
         Crop_images = param["Crop_Images"]  # @param{type: 'boolean'}
         Crop_size = 512  # @param{type: 'number'}

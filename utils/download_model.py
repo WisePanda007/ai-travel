@@ -5,9 +5,6 @@ class DownloadModel():
         from IPython.display import clear_output
         from IPython.utils import capture
 
-        # @markdown - Skip this cell if you are loading a previous session
-
-        # @markdown ---
 
         with capture.capture_output() as cap:
             os.chdir("""/content/""")

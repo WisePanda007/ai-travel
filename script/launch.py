@@ -14,10 +14,9 @@ def main(argv):
     param = demjson.decode_file("ai-travel/config/config_demo.json")
 
     if len(argv) >= 1:
-        print("传入参数")
         param = demjson.decode(urllib.request.urlopen(argv[0]).read())
 
-    print(param)
+    print("打印参数: ",param)
     training_param = param["data"]["training_params"]
     original_album_param=param["data"]["original_album"]
     # 搭建环境

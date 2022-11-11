@@ -197,7 +197,7 @@ def convert_text_enc_state_dict(text_enc_dict):
 
 if __name__ == "__main__":
 
-
+    print("保存模型")
     model_path = str(sys.argv[1])
     checkpoint_path= "{}/{}.ckpt".format(str(sys.argv[2]),str(sys.argv[3]))
 

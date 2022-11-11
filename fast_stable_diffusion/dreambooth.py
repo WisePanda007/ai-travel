@@ -480,8 +480,6 @@ class DreamBooth():
         if os.path.exists('/content/models/' + INSTANCE_NAME + '/unet/diffusion_pytorch_model.bin'):
             print("Almost done ...")
             os.chdir("""/content""")
-            os.system(
-                """wget -O convertosd.py https://github.com/TheLastBen/fast-stable-diffusion/raw/main/Dreambooth/convertosd.py""")
             os.system("""python /content/ai-travel/fast_stable_diffusion/convertosd.py {} {} {}""".format(OUTPUT_DIR,SESSION_DIR,Session_Name))
             if os.path.exists(SESSION_DIR + "/" + INSTANCE_NAME + '.ckpt'):
                 if not os.path.exists(str(SESSION_DIR + '/tokenizer')):

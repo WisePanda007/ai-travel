@@ -71,7 +71,7 @@ class DreamBooth():
         MDLPTH = str(SESSION_DIR + "/" + Session_Name + '.ckpt')
         CLASS_DIR = SESSION_DIR + '/Regularization_images'
 
-        Contains_faces = "No"  # @param ["No", "Female", "Male", "Both"]
+        Contains_faces = param["Contains_Faces"]  # @param ["No", "Female", "Male", "Both"]
 
         def reg(CLASS_DIR):
             with capture.capture_output() as cap:
@@ -176,6 +176,7 @@ class DreamBooth():
             os.system('wget "{}" -O "{}"'.format(url, img_path))
             img = Image.open(img_path)
             img.save(img_path.rstrip(".jpeg")+".jpg", "JPEG", quality=72, optimize=True, progressive=True)
+            os.system("rm -rf "+img_path)
 
         IMAGES_FOLDER_OPTIONAL = path  # @param{type: 'string'}
 
@@ -347,7 +348,7 @@ class DreamBooth():
         # @markdown - For example you can devide 5%, 5%, 5% on 3 training runs on the model, or 0%, 0%, 15%, given that 15% will cover the total training steps count (15% of 200 steps is not enough).
 
         # @markdown - Enter the % of the total steps for which to train the text_encoder
-        Train_text_encoder_for = param["Train_Text_Encoder_For"]  # @param{type: 'number'}
+        Train_text_encoder_for = int(param["Train_Text_Encoder_For"])  # @param{type: 'number'}
 
         # @markdown - Keep the % low for better style transfer, more training steps will be necessary for good results.
         # @markdown - Higher % will give more weight to the instance, it gives stronger results at lower steps count, but harder to stylize,

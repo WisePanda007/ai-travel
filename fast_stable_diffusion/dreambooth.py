@@ -81,19 +81,19 @@ class DreamBooth():
                     os.chdir(CLASS_DIR)
                     os.system("""rm -r Women Men Mix""")
                     os.system(
-                        """wget -O Womenz 'https://github.com/TheLastBen/fast-stable-diffusion/raw/main/Dreambooth/Regularization/Women'""")
+                        """wget -O -p Womenz 'https://github.com/TheLastBen/fast-stable-diffusion/raw/main/Dreambooth/Regularization/Women'""")
                     os.system(
-                        """wget -O Menz 'https://github.com/TheLastBen/fast-stable-diffusion/raw/main/Dreambooth/Regularization/Men'""")
+                        """wget -O -p Menz 'https://github.com/TheLastBen/fast-stable-diffusion/raw/main/Dreambooth/Regularization/Men'""")
                     os.system(
-                        """wget -O Mixz 'https://github.com/TheLastBen/fast-stable-diffusion/raw/main/Dreambooth/Regularization/Mix'""")
+                        """wget -O -p Mixz 'https://github.com/TheLastBen/fast-stable-diffusion/raw/main/Dreambooth/Regularization/Mix'""")
                     os.system("""unzip Menz""")
                     os.system("""unzip Womenz""")
                     os.system("""unzip Mixz""")
                     os.system("""rm Menz Womenz Mixz""")
                     os.system("""find . -name "* *" -type f | rename 's/ /_/g'""")  # 注意
                     os.chdir("""/content""")
+                    clear_output()
 
-        # @markdown - If you're training on a subject with a face or a movie/style that contains faces. (experimental, still needs some tuning)
 
         if os.path.exists(str(SESSION_DIR)) and not os.path.exists(str(SESSION_DIR + "/" + Session_Name + '.ckpt')):
             print(
@@ -272,14 +272,9 @@ class DreamBooth():
 
         Enable_text_encoder_training = param["Enable_Text_Encoder_Training"]  # @param{type: 'boolean'}
 
-        # @markdown - At least 10% of the total training steps are needed, it doesn't matter if they are at the beginning or in the middle or the end, in case you're training the model multiple times.
-        # @markdown - For example you can devide 5%, 5%, 5% on 3 training runs on the model, or 0%, 0%, 15%, given that 15% will cover the total training steps count (15% of 200 steps is not enough).
 
-        # @markdown - Enter the % of the total steps for which to train the text_encoder
         Train_text_encoder_for = int(param["Train_Text_Encoder_For"])  # @param{type: 'number'}
 
-        # @markdown - Keep the % low for better style transfer, more training steps will be necessary for good results.
-        # @markdown - Higher % will give more weight to the instance, it gives stronger results at lower steps count, but harder to stylize,
 
         if Train_text_encoder_for >= 100:
             stptxt = Training_Steps

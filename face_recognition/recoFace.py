@@ -91,12 +91,15 @@ test_json = {"code":0,"message":'null',"data":{"id":1,"original_album":["https:/
 #             return 0
 
 def crop_img(img_path):
+    print(img_path,"人脸裁剪")
 
     image = cv2.imread(img_path)
     img_height, img_width = image.shape[:2]
     image_save_path = img_path
 
     if img_height<512 or img_width<512:
+        print("图片小于512*512")
+
         print('img_height:'+str(img_height))
         print('img_width:'+str(img_width))
         print('image too small.')

@@ -2,9 +2,7 @@
 class DreamBooth():
     def __init__(self, param, original_album_param):
         import os
-        from IPython.display import clear_output
         from IPython.utils import capture
-        import wget
         import time
         def fdownloadmodel():
             token = input("Insert your huggingface token :")
@@ -38,13 +36,11 @@ class DreamBooth():
             Session_Name = input('')
         Session_Name = Session_Name.replace(" ", "_")
 
-        # @markdown - Enter the session name, it if it exists, it will load it, otherwise it'll create an new session.
 
         Session_Link_optional = ""  # @param{type: 'string'}
 
-        # @markdown - Import a session from another gdrive, the shared gdrive link must point to the specific session's folder that contains the trained CKPT, remove any intermediary CKPT if any.
 
-        WORKSPACE = '/content/gdrive/MyDrive/Fast-Dreambooth'
+        WORKSPACE = '/content/ai-travel/repository/Fast-Dreambooth'
 
         if Session_Link_optional != "":
             print('[1;32mDownloading session...')
@@ -155,7 +151,6 @@ class DreamBooth():
             # @markdown - Check out this example : https://i.imgur.com/d2lD3rz.jpeg
 
         import shutil
-        from google.colab import files
         from PIL import Image
 
         Remove_existing_instance_images = True  # @param{type: 'boolean'}

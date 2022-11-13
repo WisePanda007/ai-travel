@@ -5,9 +5,6 @@ class Xformers():
     def __init__(self, param):
         print("安装xformers")
         from subprocess import getoutput
-        from IPython.display import HTML
-        from IPython.display import clear_output
-        import wget
         import time
 
         s = getoutput('nvidia-smi')
@@ -42,4 +39,4 @@ class Xformers():
                 """pip install -q https://github.com/TheLastBen/fast-stable-diffusion/raw/main/precompiled/V100/xformers-0.0.13.dev0-py3-none-any.whl""")
         else:
             print("错误：不支持的GPU")
-        print('[1;32mDONE !')
+        print('xformers安装完成')

@@ -1,15 +1,18 @@
 import sys
 
+
 sys.path.append("/content/ai-travel/")
 import demjson
 import os
 from utils.xformers import Xformers
 from utils.download_model import DownloadModel
 from fast_stable_diffusion.dreambooth import DreamBooth
+from IPython.display import clear_output
 import urllib.request
 
 
 def main(argv):
+    clear_output()
     print("开始运行")
     param = demjson.decode_file("ai-travel/config/config_demo.json")
 

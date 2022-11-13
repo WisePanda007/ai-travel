@@ -1,31 +1,60 @@
 {
-    "format_face_file":"",
-    "model_path":"",
-    "output_img_path":"",
-    
-    "Huggingface_Token":"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",
-    
-    "dream_config":{
-        "Session_Name":"test",
-        "Session_Link_optional":"",
-        "Contains_faces":"No",
-        "Remove_existing_instance_images":true,
-        "IMAGES_FOLDER_OPTIONAL":"/content/gdrive/MyDrive/img/ziyounvshen",
-        "Crop_images":true,
-        "Crop_size":512
+  "code": 0,
+  "message": null,
+  "data": {
+    "id": 1,
+    "name": "\u6d4b\u8bd5AI\u753b\u753b",
+    "original_album": [
+      {
+        "url": "https:\/\/community.mafengwo.net\/mfs\/s19\/M00\/A1\/08\/CoNCfmNqCGNX91KiAAAOpAKr1LE.jpeg",
+        "name": "elonmuskmfwailab"
+      },
+      {
+        "url": "https:\/\/community.mafengwo.net\/mfs\/s19\/M00\/FD\/07\/CoNE4WNqCGNLs833AAATie9uH0I.jpeg",
+        "name": "elonmuskmfwailab"
+      },
+      {
+        "url": "https:\/\/community.mafengwo.net\/mfs\/s19\/M00\/A5\/EC\/CoNBHGNqCGMC1-f8AAAerrl_Opg.jpeg",
+        "name": "elonmuskmfwailab"
+      },
+      {
+        "url": "https:\/\/community.mafengwo.net\/mfs\/s19\/M00\/F3\/FB\/CoNBdGNqCGN7sBpeAAAWupoKt_I.jpeg",
+        "name": "elonmuskmfwailab"
+      },
+      {
+        "url": "https:\/\/community.mafengwo.net\/mfs\/s19\/M00\/B0\/29\/CoNJ72NqCGMxcxtVAAAQ7s0KY-Q.jpeg",
+        "name": "elonmuskmfwailab"
+      }
+    ],
+    "training_params": {
+      "Huggingface_Token": "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",
+      "Session_Name": "uid_face_model",
+      "Contains_Faces": "No",
+      "Crop_Images": "false",
+      "Training_Steps": "3000",
+      "Enable_Text_Encoder_Training": "true",
+      "Train_Text_Encoder_For": "35"
     },
-
-    "train_config":{
-        "Resume_Training":false,
-        "Training_Steps":-1,
-        "Train_text_encoder_for":35
-    },
-
-    "deploy_config":{
-        "prompt":"",
-        "negative_prompt":"",
-        "sampling_method":"",
-        "width":"",
-        "height":""
-    }
+    "rendering_params": [
+      {
+        "Name": "",
+        "CKPT": "",
+        "Prompts": "",
+        "NegativePrompts": "",
+        "Sampling_Steps": "50",
+        "Sampling_Method": "Euler a",
+        "Restore_Faces": "true",
+        "Width": "512",
+        "Height": "512",
+        "Batch_Count": "1",
+        "Batch_Size": "8",
+        "CFG_Scale": "7",
+        "Seed": "-1",
+        "Style": "None",
+        "Super_Resolution": "",
+        "Super_Weight": "2048",
+        "Super_Height": "2048"
+      }
+    ]
+  }
 }

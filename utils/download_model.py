@@ -2,10 +2,7 @@ class DownloadModel():
     def __init__(self, param):
         import os
         import time
-        from IPython.display import clear_output
         from IPython.utils import capture
-
-
         with capture.capture_output() as cap:
             os.chdir("""/content/""")
 

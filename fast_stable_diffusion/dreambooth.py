@@ -4,6 +4,12 @@ class DreamBooth():
         import os
         from IPython.utils import capture
         import time
+        from face_recognition import recoFace
+        from PIL import Image
+        from subprocess import getoutput
+        from IPython.display import clear_output
+        import random
+
         def fdownloadmodel():
             token = input("Insert your huggingface token :")
             os.chdir("""/content/""")
@@ -36,9 +42,7 @@ class DreamBooth():
             Session_Name = input('')
         Session_Name = Session_Name.replace(" ", "_")
 
-
         Session_Link_optional = ""  # @param{type: 'string'}
-
 
         WORKSPACE = '/content/ai-travel/repository/Fast-Dreambooth'
 
@@ -144,15 +148,6 @@ class DreamBooth():
         if Contains_faces == "Both":
             CLASS_DIR = CLASS_DIR + '/Mix'
 
-            # @markdown
-
-            # @markdown # The most importent step is to rename the instance pictures of each subject to a unique unknown identifier, example :
-            # @markdown - If you have 30 pictures of yourself, simply select them all and rename only one to the chosen identifier for example : phtmejhn, the files would be : phtmejhn (1).jpg, phtmejhn (2).png ....etc then upload them, do the same for other people or objects with a different identifier, and that's it.
-            # @markdown - Check out this example : https://i.imgur.com/d2lD3rz.jpeg
-
-        import shutil
-        from PIL import Image
-
         Remove_existing_instance_images = True  # @param{type: 'boolean'}
 
         if Remove_existing_instance_images:
@@ -170,15 +165,14 @@ class DreamBooth():
             img_path = path + str(name) + '(' + str(count) + ')' + '.jpeg'
             os.system('wget "{}" -O "{}"'.format(url, img_path))
             img = Image.open(img_path)
-            img.save(img_path.rstrip(".jpeg")+".jpg", "JPEG", quality=100, optimize=True, progressive=True)
+            img.save(img_path.rstrip(".jpeg") + ".jpg", "JPEG", quality=100, optimize=True, progressive=True)
             os.system('rm -rf "{}"'.format(img_path))
 
         IMAGES_FOLDER_OPTIONAL = path  # @param{type: 'string'}
 
-        Crop_images = True if param["Crop_Images"]=="true" else False # @param{type: 'boolean'}
+        Crop_images = True if param["Crop_Images"] == "true" else False  # @param{type: 'boolean'}
         Crop_size = 512  # @param{type: 'number'}
 
-        # @markdown - Unless you want to crop them manually in a precise way, you don't need to crop your instance images externally.
 
         while IMAGES_FOLDER_OPTIONAL != "" and not os.path.exists(str(IMAGES_FOLDER_OPTIONAL)):
             print('[1;31mThe image folder specified does not exist, use the colab file explorer to copy the path :')
@@ -188,22 +182,7 @@ class DreamBooth():
             with capture.capture_output() as cap:
                 if Crop_images:
                     for filename in os.listdir(IMAGES_FOLDER_OPTIONAL):
-                        extension = filename.split(".")[1]
-                        identifier = filename.split(".")[0]
-                        new_path_with_file = os.path.join(IMAGES_FOLDER_OPTIONAL, filename)
-                        file = Image.open(new_path_with_file)
-                        width, height = file.size
-                        side_length = min(width, height)
-                        left = (width - side_length) / 2
-                        top = (height - side_length) / 2
-                        right = (width + side_length) / 2
-                        bottom = (height + side_length) / 2
-                        image = file.crop((left, top, right, bottom))
-                        image = image.resize((Crop_size, Crop_size))
-                        if (extension.upper() == "JPG"):
-                            image.save(new_path_with_file, format="JPEG", quality=100)
-                        else:
-                            image.save(new_path_with_file, format=extension.upper())
+                        recoFace.crop_img(filename)
                         os.system('cp -r "{}/." "{}"'.format(IMAGES_FOLDER_OPTIONAL, INSTANCE_DIR))
                 else:
                     os.system('cp -r "{}/." "{}"'.format(IMAGES_FOLDER_OPTIONAL, INSTANCE_DIR))
@@ -215,18 +194,11 @@ class DreamBooth():
                     os.system("""rm -r """ + INSTANCE_DIR + "/.ipynb_checkpoints")
             print('[1;32mDone, proceed to the training cell')
 
-
         with capture.capture_output() as cap:
             os.chdir(SESSION_DIR)
             os.system("""rm instance_images.zip""")
             os.system("""zip -r instance_images instance_images""")
             os.chdir("""/content""")
-
-        import os
-        from subprocess import getoutput
-        from IPython.display import HTML
-        from IPython.display import clear_output
-        import random
 
         Resume_Training = False  # @param {type:"boolean"}
 
@@ -242,13 +214,9 @@ class DreamBooth():
                 print(
                     '[1;31mError downloading the model, make sure you have accepted the terms at https://huggingface.co/runwayml/stable-diffusion-v1-5')
 
-            # @markdown  - If you're not satisfied with the result, check this box, run again the cell and it will continue training the current model.
-
         MODELT_NAME = MODEL_NAME
 
         Training_Steps = int(param["Training_Steps"])  # @param{type: 'number'}
-        Training_Steps=100
-        # @markdown - Total Steps = Number of Instance images * 200, if you use 30 images, use 6000 steps, if you're not satisfied with the result, resume training for another 500 steps, and so on ...
 
         Seed = ''  # @param{type: 'string'}
 

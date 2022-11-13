@@ -28,9 +28,9 @@ class DownloadModel():
             os.system("""git config core.sparsecheckout true""")
             os.system(
                 """echo "feature_extractor\nsafety_checker\nscheduler\ntext_encoder\ntokenizer\nunet\nmodel_index.json" > .git/info/sparse-checkout""")
-            os.system("""git pull origin main""")
+            os.system("""git pull -q origin main""")
             if os.path.exists('/content/stable-diffusion-v1-5/unet/diffusion_pytorch_model.bin'):
-                os.system("""git clone "https://USER:{}@huggingface.co/stabilityai/sd-vae-ft-mse" """.format(token))
+                os.system("""git clone -q "https://USER:{}@huggingface.co/stabilityai/sd-vae-ft-mse" """.format(token))
                 os.system("""mv /content/stable-diffusion-v1-5/sd-vae-ft-mse /content/stable-diffusion-v1-5/vae""")
                 os.system("""rm -r /content/stable-diffusion-v1-5/.git""")
                 alter("/content/stable-diffusion-v1-5/scheduler/scheduler_config.json", '"trained_betas": null', '"trained_betas": null,\naaaaa')

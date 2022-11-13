@@ -28,10 +28,10 @@
     ],
     "training_params": {
       "Huggingface_Token": "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",
-      "Session_Name": "uid_face_model",
+      "Session_Name": "msk_face_model",
       "Contains_Faces": "No",
-      "Crop_Images": "false",
-      "Training_Steps": "3000",
+      "Crop_Images": "true",
+      "Training_Steps": "500",
       "Enable_Text_Encoder_Training": "true",
       "Train_Text_Encoder_For": "35"
     },

@@ -9,12 +9,9 @@ Description:
 '''
 import cv2
 import numpy as np
-import os
-import urllib.request
-import requests
 
-prototxt_path = "./device_file/deploy.prototxt"
-model_path = "./device_file/res10_300x300_ssd_iter_140000_fp16.caffemodel"
+prototxt_path = "/content/ai-travel/face_recognition/device_file/deploy.prototxt"
+model_path = "/content/ai-travel/face_recognition/device_file/res10_300x300_ssd_iter_140000_fp16.caffemodel"
 model = cv2.dnn.readNetFromCaffe(prototxt_path, model_path)
 
 # test_json

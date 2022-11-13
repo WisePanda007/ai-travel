@@ -182,7 +182,7 @@ class DreamBooth():
             with capture.capture_output() as cap:
                 if Crop_images:
                     for filename in os.listdir(IMAGES_FOLDER_OPTIONAL):
-                        recoFace.crop_img(filename)
+                        recoFace.crop_img(os.path.join(IMAGES_FOLDER_OPTIONAL,filename))
                         os.system('cp -r "{}/." "{}"'.format(IMAGES_FOLDER_OPTIONAL, INSTANCE_DIR))
                 else:
                     os.system('cp -r "{}/." "{}"'.format(IMAGES_FOLDER_OPTIONAL, INSTANCE_DIR))

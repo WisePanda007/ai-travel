@@ -100,7 +100,7 @@ class DreamBooth():
             reg(CLASS_DIR)
             if not os.path.exists('/content/stable-diffusion-v1-5/unet/diffusion_pytorch_model.bin'):
                 if os.path.exists('/content/stable-diffusion-v1-5'):
-                    os.system("""rm -r '/content/stable-diffusion-v1-5'""")
+                    os.system("""rm -rf '/content/stable-diffusion-v1-5'""")
                 fdownloadmodel()
             if not os.path.exists('/content/stable-diffusion-v1-5/unet/diffusion_pytorch_model.bin'):
                 print(
@@ -117,10 +117,10 @@ class DreamBooth():
                     MDLPTH, OUTPUT_DIR, SESSION_DIR))
             if os.path.exists(OUTPUT_DIR + '/unet/diffusion_pytorch_model.bin'):
                 resume = True
-                os.system("""rm /content/v1-inference.yaml""")
+                os.system("""rm -rf /content/v1-inference.yaml""")
                 print('[1;32mSession loaded.')
             else:
-                os.system("""rm /content/v1-inference.yaml""")
+                os.system("""rm -rf /content/v1-inference.yaml""")
                 if not os.path.exists(OUTPUT_DIR + '/unet/diffusion_pytorch_model.bin'):
                     print(
                         '[1;31mConversion error, if the error persists, remove the CKPT file from the current session folder')
@@ -131,7 +131,7 @@ class DreamBooth():
             reg(CLASS_DIR)
             if not os.path.exists('/content/stable-diffusion-v1-5/unet/diffusion_pytorch_model.bin'):
                 if os.path.exists('/content/stable-diffusion-v1-5'):
-                    os.system("""rm -r '/content/stable-diffusion-v1-5'""")
+                    os.system("""rm -rf '/content/stable-diffusion-v1-5'""")
                 fdownloadmodel()
             if os.path.exists('/content/stable-diffusion-v1-5/unet/diffusion_pytorch_model.bin'):
                 print('[1;32mSession created, proceed to uploading instance images')
@@ -150,7 +150,7 @@ class DreamBooth():
 
         if Remove_existing_instance_images:
             if os.path.exists(str(INSTANCE_DIR)):
-                os.system("""rm -r """ + INSTANCE_DIR)
+                os.system("""rm -rf """ + INSTANCE_DIR)
 
         if not os.path.exists(str(INSTANCE_DIR)):
             os.system("""mkdir -p """ + INSTANCE_DIR)
@@ -195,7 +195,7 @@ class DreamBooth():
 
         with capture.capture_output() as cap:
             os.chdir(SESSION_DIR)
-            os.system("""rm instance_images.zip""")
+            os.system("""rm -rf instance_images.zip""")
             os.system("""zip -r instance_images instance_images""")
             os.chdir("""/content""")
 
@@ -204,7 +204,7 @@ class DreamBooth():
         if not Resume_Training and not os.path.exists(
                 '/content/stable-diffusion-v1-5/unet/diffusion_pytorch_model.bin'):
             if os.path.exists('/content/stable-diffusion-v1-5'):
-                os.system("""rm -r '/content/stable-diffusion-v1-5'""")
+                os.system("""rm -rf '/content/stable-diffusion-v1-5'""")
             print('[1;31mOriginal model not found, downloading....[0m')
             fdownloadmodel()
             if os.path.exists('/content/stable-diffusion-v1-5/unet/diffusion_pytorch_model.bin'):

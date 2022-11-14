@@ -15,7 +15,7 @@ class DownloadModel():
             if token == "":
                 token = input("Insert your huggingface token :")
             if os.path.exists('/content/stable-diffusion-v1-5'):
-                os.system("""rm -r /content/stable-diffusion-v1-5""")
+                os.system("""rm -rf /content/stable-diffusion-v1-5""")
 
             os.chdir("""/content/""")
             os.system("""mkdir -p /content/stable-diffusion-v1-5""")
@@ -32,7 +32,7 @@ class DownloadModel():
             if os.path.exists('/content/stable-diffusion-v1-5/unet/diffusion_pytorch_model.bin'):
                 os.system("""git clone -q "https://USER:{}@huggingface.co/stabilityai/sd-vae-ft-mse" """.format(token))
                 os.system("""mv /content/stable-diffusion-v1-5/sd-vae-ft-mse /content/stable-diffusion-v1-5/vae""")
-                os.system("""rm -r /content/stable-diffusion-v1-5/.git""")
+                os.system("""rm -rf /content/stable-diffusion-v1-5/.git""")
                 alter("/content/stable-diffusion-v1-5/scheduler/scheduler_config.json", '"trained_betas": null', '"trained_betas": null,\naaaaa')
                 alter("/content/stable-diffusion-v1-5/scheduler/scheduler_config.json", "aaaaa", '  "clip_sample": false')
                 alter("/content/stable-diffusion-v1-5/vae/config.json", '"sample_size": 512,', '"sample_size": 256,')

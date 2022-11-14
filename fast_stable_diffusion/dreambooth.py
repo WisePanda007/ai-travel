@@ -50,19 +50,19 @@ class DreamBooth():
             print('[1;32mDownloading session...')
         with capture.capture_output() as cap:
             os.chdir("""/content""")
-            if Session_Link_optional != "":
-                if not os.path.exists(str(WORKSPACE + '/Sessions')):
-                    os.system("mkdir -p " + str(WORKSPACE + '/Sessions'))
-                    time.sleep(1)
-                os.chdir(str(WORKSPACE + '/Sessions'))
-                os.system("""gdown --folder --remaining-ok -O {} {} """.format(Session_Name, Session_Link_optional))
-                os.chdir(Session_Name)
-                os.system("""rm -r instance_images""")
-                os.system("""rm -r Regularization_images""")
-                os.system("""unzip instance_images.zip""")
-                os.system("""rm instance_images.zip""")
-                os.system("""mv *.ckpt {}.ckpt""".format(Session_Name))
-                os.chdir("""/content""")
+            # if Session_Link_optional != "":
+            #     if not os.path.exists(str(WORKSPACE + '/Sessions')):
+            #         os.system("mkdir -p " + str(WORKSPACE + '/Sessions'))
+            #         time.sleep(1)
+            #     os.chdir(str(WORKSPACE + '/Sessions'))
+            #     os.system("""gdown --folder --remaining-ok -O {} {} """.format(Session_Name, Session_Link_optional))
+            #     os.chdir(Session_Name)
+            #     os.system("""rm -r instance_images""")
+            #     os.system("""rm -r Regularization_images""")
+            #     os.system("""unzip instance_images.zip""")
+            #     os.system("""rm instance_images.zip""")
+            #     os.system("""mv *.ckpt {}.ckpt""".format(Session_Name))
+            #     os.chdir("""/content""")
 
         INSTANCE_NAME = Session_Name
         OUTPUT_DIR = "/content/models/" + Session_Name
@@ -89,11 +89,10 @@ class DreamBooth():
                     os.system("""unzip Menz""")
                     os.system("""unzip Womenz""")
                     os.system("""unzip Mixz""")
-                    # os.system("""rm -rf Menz Womenz Mixz""")
+                    os.system("""rm -rf Menz Womenz Mixz""")
                     os.system("""find . -name "* *" -type f | rename 's/ /_/g'""")  # 注意
                     os.chdir("""/content""")
                     clear_output()
-
 
         if os.path.exists(str(SESSION_DIR)) and not os.path.exists(str(SESSION_DIR + "/" + Session_Name + '.ckpt')):
             print(
@@ -125,7 +124,6 @@ class DreamBooth():
                 if not os.path.exists(OUTPUT_DIR + '/unet/diffusion_pytorch_model.bin'):
                     print(
                         '[1;31mConversion error, if the error persists, remove the CKPT file from the current session folder')
-
 
         elif not os.path.exists(str(SESSION_DIR)):
             os.system("""mkdir -p """ + INSTANCE_DIR)
@@ -170,9 +168,8 @@ class DreamBooth():
 
         IMAGES_FOLDER_OPTIONAL = path  # @param{type: 'string'}
 
-        Crop_images = True if param["Crop_Images"].upper() == "True" else False  # @param{type: 'boolean'}
+        Crop_images = True if param["Crop_Images"].upper() == "TRUE" else False  # @param{type: 'boolean'}
         Crop_size = 512  # @param{type: 'number'}
-
 
         while IMAGES_FOLDER_OPTIONAL != "" and not os.path.exists(str(IMAGES_FOLDER_OPTIONAL)):
             print('[1;31mThe image folder specified does not exist, use the colab file explorer to copy the path :')
@@ -181,9 +178,11 @@ class DreamBooth():
         if IMAGES_FOLDER_OPTIONAL != "":
             with capture.capture_output() as cap:
                 if Crop_images:
+                    print("开始人脸裁剪")
                     for filename in os.listdir(IMAGES_FOLDER_OPTIONAL):
-                        recoFace.crop_img(os.path.join(IMAGES_FOLDER_OPTIONAL,filename))
+                        recoFace.crop_img(os.path.join(IMAGES_FOLDER_OPTIONAL, filename))
                         os.system('cp -r "{}/." "{}"'.format(IMAGES_FOLDER_OPTIONAL, INSTANCE_DIR))
+                    print("人脸裁剪完成")
                 else:
                     os.system('cp -r "{}/." "{}"'.format(IMAGES_FOLDER_OPTIONAL, INSTANCE_DIR))
 
@@ -270,10 +269,10 @@ class DreamBooth():
         except:
             Contain_f = Contains_faces
 
-        Enable_text_encoder_training = True if param["Enable_Text_Encoder_Training"].upper() == "True" else False # @param{type: 'boolean'}
+        Enable_text_encoder_training = True if param[
+                                                   "Enable_Text_Encoder_Training"].upper() == "TRUE" else False  # @param{type: 'boolean'}
 
         Train_text_encoder_for = int(param["Train_Text_Encoder_For"])  # @param{type: 'number'}
-
 
         if Train_text_encoder_for >= 100:
             stptxt = Training_Steps

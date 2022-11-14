@@ -44,7 +44,7 @@ class DreamBooth():
 
         Session_Link_optional = ""  # @param{type: 'string'}
 
-        WORKSPACE = '/content/ai-travel/repository/Fast-Dreambooth'
+        WORKSPACE = '/content/Fast-Dreambooth'
 
         if Session_Link_optional != "":
             print('[1;32mDownloading session...')

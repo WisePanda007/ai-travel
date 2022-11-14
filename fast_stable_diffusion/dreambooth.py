@@ -79,17 +79,17 @@ class DreamBooth():
                     if not os.path.exists(str(CLASS_DIR)):
                         os.system("""mkdir -p {}""".format(CLASS_DIR))
                     os.chdir(CLASS_DIR)
-                    os.system("""rm -r Women Men Mix""")
+                    os.system("""rm -rf Women Men Mix""")
                     os.system(
-                        """wget -O -p Womenz 'https://github.com/TheLastBen/fast-stable-diffusion/raw/main/Dreambooth/Regularization/Women'""")
+                        """wget -p -O Womenz 'https://github.com/TheLastBen/fast-stable-diffusion/raw/main/Dreambooth/Regularization/Women'""")
                     os.system(
-                        """wget -O -p Menz 'https://github.com/TheLastBen/fast-stable-diffusion/raw/main/Dreambooth/Regularization/Men'""")
+                        """wget -p -O Menz 'https://github.com/TheLastBen/fast-stable-diffusion/raw/main/Dreambooth/Regularization/Men'""")
                     os.system(
-                        """wget -O -p Mixz 'https://github.com/TheLastBen/fast-stable-diffusion/raw/main/Dreambooth/Regularization/Mix'""")
+                        """wget -p -O Mixz 'https://github.com/TheLastBen/fast-stable-diffusion/raw/main/Dreambooth/Regularization/Mix'""")
                     os.system("""unzip Menz""")
                     os.system("""unzip Womenz""")
                     os.system("""unzip Mixz""")
-                    os.system("""rm Menz Womenz Mixz""")
+                    # os.system("""rm -rf Menz Womenz Mixz""")
                     os.system("""find . -name "* *" -type f | rename 's/ /_/g'""")  # 注意
                     os.chdir("""/content""")
                     clear_output()
@@ -163,14 +163,14 @@ class DreamBooth():
             path = '/content/original_album/' + str(name) + '/'
             os.system("mkdir -p " + path)
             img_path = path + str(name) + '(' + str(count) + ')' + '.jpeg'
-            os.system('wget "{}" -O "{}"'.format(url, img_path))
+            os.system('wget -q "{}" -O "{}"'.format(url, img_path))
             img = Image.open(img_path)
             img.save(img_path.rstrip(".jpeg") + ".jpg", "JPEG", quality=100, optimize=True, progressive=True)
             os.system('rm -rf "{}"'.format(img_path))
 
         IMAGES_FOLDER_OPTIONAL = path  # @param{type: 'string'}
 
-        Crop_images = True if param["Crop_Images"] == "true" else False  # @param{type: 'boolean'}
+        Crop_images = True if param["Crop_Images"].upper() == "True" else False  # @param{type: 'boolean'}
         Crop_size = 512  # @param{type: 'number'}
 
 
@@ -270,8 +270,7 @@ class DreamBooth():
         except:
             Contain_f = Contains_faces
 
-        Enable_text_encoder_training = param["Enable_Text_Encoder_Training"]  # @param{type: 'boolean'}
-
+        Enable_text_encoder_training = True if param["Enable_Text_Encoder_Training"].upper() == "True" else False # @param{type: 'boolean'}
 
         Train_text_encoder_for = int(param["Train_Text_Encoder_For"])  # @param{type: 'number'}
 

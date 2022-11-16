@@ -29,9 +29,9 @@
     "training_params": {
       "Huggingface_Token": "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",
       "Session_Name": "msk_face_model",
-      "Contains_Faces": "Male", //["No", "Female", "Male", "Both"]
+      "Contains_Faces": "No", //["No", "Female", "Male", "Both"]
       "Crop_Images": "true",
-      "Training_Steps": "500",
+      "Training_Steps": "100",
       "Enable_Text_Encoder_Training": "true",
       "Train_Text_Encoder_For": "35"
     },

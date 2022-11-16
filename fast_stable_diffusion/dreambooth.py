@@ -155,7 +155,7 @@ class DreamBooth():
         if not os.path.exists(str(INSTANCE_DIR)):
             os.system("""mkdir -p """ + INSTANCE_DIR)
 
-        IMAGES_FOLDER_OPTIONAL = '/content/original_album/' + param["Session_Name"]
+        IMAGES_FOLDER_OPTIONAL = os.path.join('/content/original_album/',param["Session_Name"])
         os.system("mkdir -p " + IMAGES_FOLDER_OPTIONAL)
         for count, i in enumerate(original_album_param):
             url = i["url"]

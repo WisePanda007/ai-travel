@@ -4,7 +4,7 @@ import os
 import requests
 import json
 
-id_name = (os.listdir('/data/ai-test/session/'))[0]
+# id_name = (os.listdir('/data/ai-test/session/'))[0]
 # create API client
 api = webuiapi.WebUIApi()
 

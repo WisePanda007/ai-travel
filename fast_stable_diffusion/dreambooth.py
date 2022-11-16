@@ -161,7 +161,7 @@ class DreamBooth():
             url = i["url"]
             name = i["name"]
             img_path = IMAGES_FOLDER_OPTIONAL +"/"+ str(name) + '(' + str(count) + ')' + '.jpeg'
-            os.system('wget -q "{}" -O "{}"'.format(url, img_path))
+            os.system('wget "{}" -O "{}"'.format(url, img_path))
             img = Image.open(img_path)
             img.save(img_path.rstrip(".jpeg") + ".jpg", "JPEG", quality=100, optimize=True, progressive=True)
             os.system('rm -rf "{}"'.format(img_path))

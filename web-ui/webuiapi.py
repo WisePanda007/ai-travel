@@ -29,7 +29,7 @@ def b64_img(image: Image):
 class WebUIApi:
     def __init__(self,
                  host='127.0.0.1',
-                 port=7863,
+                 port=7861,
                  baseurl=None,
                  sampler='Euler a',
                  steps=20):

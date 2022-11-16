@@ -155,18 +155,17 @@ class DreamBooth():
         if not os.path.exists(str(INSTANCE_DIR)):
             os.system("""mkdir -p """ + INSTANCE_DIR)
 
+        IMAGES_FOLDER_OPTIONAL = '/content/original_album/' + param["Session_Name"]
+        os.system("mkdir -p " + IMAGES_FOLDER_OPTIONAL)
         for count, i in enumerate(original_album_param):
             url = i["url"]
             name = i["name"]
-            path = '/content/original_album/' + str(name) + '/'
-            os.system("mkdir -p " + path)
-            img_path = path + str(name) + '(' + str(count) + ')' + '.jpeg'
+            img_path = IMAGES_FOLDER_OPTIONAL + str(name) + '(' + str(count) + ')' + '.jpeg'
             os.system('wget -q "{}" -O "{}"'.format(url, img_path))
             img = Image.open(img_path)
             img.save(img_path.rstrip(".jpeg") + ".jpg", "JPEG", quality=100, optimize=True, progressive=True)
             os.system('rm -rf "{}"'.format(img_path))
 
-        IMAGES_FOLDER_OPTIONAL = path  # @param{type: 'string'}
 
         Crop_images = True if param["Crop_Images"].upper() == "TRUE" else False  # @param{type: 'boolean'}
         Crop_size = 512  # @param{type: 'number'}

@@ -21,7 +21,7 @@ def main(argv):
     training_param = param["data"]["training_params"]
     original_album_param=param["data"]["original_album"]
     # 搭建环境
-    # x = Xformers(training_param)
+    x = Xformers(training_param)
 
     # 图片格式转换
 

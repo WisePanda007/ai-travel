@@ -10,14 +10,16 @@ class DreamBooth():
         from IPython.display import clear_output
         import random
 
+        Session_Name = param["Session_Name"]  # @param{type: 'string'}
+        Contains_faces = param["Contains_Faces"]  # @param ["No", "Female", "Male", "Both"]
+        Resume_Training = param["Resume_Training"]  # @param {type:"boolean"}
+        Old_Model_Path = param["Old_Model_Path"] 
 
         MODEL_NAME = "/content/stable-diffusion-v1-5"
         PT = ""
         Captionned_instance_images = True
-        Session_Name = param["Session_Name"]  # @param{type: 'string'}
         Session_Name = Session_Name.replace(" ", "_")
         WORKSPACE = '/content/Fast-Dreambooth'
-
         INSTANCE_NAME = Session_Name
         OUTPUT_DIR = "/content/models/" + Session_Name
         SESSION_DIR = WORKSPACE + '/Sessions/' + Session_Name
@@ -25,38 +27,37 @@ class DreamBooth():
         MDLPTH = str(SESSION_DIR + "/" + Session_Name + '.ckpt')
         CLASS_DIR = SESSION_DIR + '/Regularization_images'
 
-        Contains_faces = param["Contains_Faces"]  # @param ["No", "Female", "Male", "Both"]
 
         def reg(CLASS_DIR):
-            if Contains_faces != "No":
-                if not os.path.exists(str(CLASS_DIR)):
-                    os.system("""mkdir -p {}""".format(CLASS_DIR))
-                os.chdir(CLASS_DIR)
-                os.system("""rm -rf Women Men Mix""")
-                os.system("""mv /content/Fast-Dreambooth/Regularization_images/* ./""")
-                os.system("""unzip Menz""")
-                os.system("""unzip Womenz""")
-                os.system("""unzip Mixz""")
-                os.system("""rm -rf Menz Womenz Mixz""")
-                os.system("""find . -name "* *" -type f | rename 's/ /_/g'""")  # 注意
-                os.chdir("""/content""")
+            with capture.capture_output() as cap:
+                if Contains_faces != "No":
+                    if not os.path.exists(str(CLASS_DIR)):
+                        os.system("""mkdir -p {}""".format(CLASS_DIR))
+                    os.chdir(CLASS_DIR)
+                    os.system("""rm -rf Women Men Mix""")
+                    os.system(
+                        """wget -q -O Womenz 'https://github.com/TheLastBen/fast-stable-diffusion/raw/main/Dreambooth/Regularization/Women'""")
+                    os.system(
+                        """wget -q -O Menz 'https://github.com/TheLastBen/fast-stable-diffusion/raw/main/Dreambooth/Regularization/Men'""")
+                    os.system(
+                        """wget -q -O Mixz 'https://github.com/TheLastBen/fast-stable-diffusion/raw/main/Dreambooth/Regularization/Mix'""")
+                    os.system("""unzip Menz > /dev/null 2>&1""")
+                    os.system("""unzip Womenz > /dev/null 2>&1""")
+                    os.system("""unzip Mixz > /dev/null 2>&1""")
+                    # os.system("""rm -rf Menz Womenz Mixz""")
+                    os.system("""find . -name "* *" -type f | rename 's/ /_/g'""")  # 注意
+                    os.chdir("""/content""")
+                    clear_output()
 
-        if os.path.exists(str(SESSION_DIR)) and not os.path.exists(str(SESSION_DIR + "/" + Session_Name + '.ckpt')):
-            print(
-                '[1;32mLoading session with no previous model, using the original model or the custom downloaded model')
-            reg(CLASS_DIR)
-            if not os.path.exists('/content/stable-diffusion-v1-5/unet/diffusion_pytorch_model.bin'):
-                if os.path.exists('/content/stable-diffusion-v1-5'):
-                    os.system("""rm -rf '/content/stable-diffusion-v1-5'""")
-                fdownloadmodel()
-            if not os.path.exists('/content/stable-diffusion-v1-5/unet/diffusion_pytorch_model.bin'):
-                print(
-                    '[1;31mError downloading the model, make sure you have accepted the terms at https://huggingface.co/runwayml/stable-diffusion-v1-5')
-            else:
-                print('[1;32mSession Loaded, proceed to uploading instance images')
+        if Resume_Training:
+            cos_path="sd/models/"+Old_Model_Path if Old_Model_Path[:10]!="sd/models/" else Old_Model_Path
+            cos_path=cos_path+".ckpt" if cos_path.rstrip()[-5]!=".ckpt" else cos_path
 
-        elif os.path.exists(str(SESSION_DIR + "/" + Session_Name + '.ckpt')):
-            print('[1;32mSession found, loading the trained model ...')
+            print("下载旧模型: "+cos_path)
+            os.system("""coscmd download {} {}""".format(cos_path,str(SESSION_DIR + "/" + Session_Name + '.ckpt')))
+
+        if os.path.exists(str(SESSION_DIR + "/" + Session_Name + '.ckpt')):
+            print('加载旧模型')
             reg(CLASS_DIR)
             os.system("""mkdir -p """ + OUTPUT_DIR)
             os.system(
@@ -102,20 +103,21 @@ class DreamBooth():
         if not os.path.exists(str(INSTANCE_DIR)):
             os.system("""mkdir -p """ + INSTANCE_DIR)
 
+        IMAGES_FOLDER_OPTIONAL = os.path.join("/content/original_album/", param["Session_Name"])
+        os.system("mkdir -p " + IMAGES_FOLDER_OPTIONAL)
+        print("开始下载图片")
         for count, i in enumerate(original_album_param):
             url = i["url"]
             name = i["name"]
-            path = '/content/original_album/' + str(name) + '/'
-            os.system("mkdir -p " + path)
-            img_path = path + str(name) + '(' + str(count) + ')' + '.jpeg'
-            os.system('wget -q "{}" -O "{}"'.format(url, img_path))
+            img_path = IMAGES_FOLDER_OPTIONAL + "/" + str(name) + "(" + str(count+1) + ")" + ".jpeg"
+            print(img_path)
+            os.system('wget -q -O "{}" "{}"'.format(img_path, url))
             img = Image.open(img_path)
             img.save(img_path.rstrip(".jpeg") + ".jpg", "JPEG", quality=100, optimize=True, progressive=True)
             os.system('rm -rf "{}"'.format(img_path))
+        print("图片下载完成")
 
-        IMAGES_FOLDER_OPTIONAL = path  # @param{type: 'string'}
-
-        Crop_images = True if param["Crop_Images"].upper() == "TRUE" else False  # @param{type: 'boolean'}
+        Crop_images = True if str(param["Crop_Images"]).upper() == "TRUE" else False  # @param{type: 'boolean'}
 
 
         if IMAGES_FOLDER_OPTIONAL != "":
@@ -123,25 +125,22 @@ class DreamBooth():
                 print("开始人脸裁剪")
                 for filename in os.listdir(IMAGES_FOLDER_OPTIONAL):
                     recoFace.crop_img(os.path.join(IMAGES_FOLDER_OPTIONAL, filename))
-                    os.system('cp -r "{}/." "{}"'.format(IMAGES_FOLDER_OPTIONAL, INSTANCE_DIR))
                 print("人脸裁剪完成")
+                os.system('cp -r "{}/." "{}"'.format(IMAGES_FOLDER_OPTIONAL, INSTANCE_DIR))
             else:
                 os.system('cp -r "{}/." "{}"'.format(IMAGES_FOLDER_OPTIONAL, INSTANCE_DIR))
 
             os.chdir(INSTANCE_DIR)
-            os.system("""find . -name "* *" -type f | rename 's/ /_/g'""")  # 注意
+            os.system("""find . -name "* *" -type f | rename 's/ /_/g'""") 
             os.chdir("""/content""")
             if os.path.exists(INSTANCE_DIR + "/.ipynb_checkpoints"):
                 os.system("""rm -r """ + INSTANCE_DIR + "/.ipynb_checkpoints")
-            print('[1;32mDone, proceed to the training cell')
+            print('开始训练模型')
 
         os.chdir(SESSION_DIR)
         os.system("""rm -rf instance_images.zip""")
         os.system("""zip -r instance_images instance_images""")
         os.chdir("""/content""")
-
-        Resume_Training = False  # @param {type:"boolean"}
-
 
         MODELT_NAME = MODEL_NAME
         Training_Steps = int(param["Training_Steps"])  # @param{type: 'number'}
@@ -165,29 +164,11 @@ class DreamBooth():
         precision = prec
 
 
-        try:
-            resume
-            if resume and not Resume_Training:
-                print(
-                    '[1;31mOverwrite your previously trained model ?, answering "yes" will train a new model, answering "no" will resume the training of the previous model?  yes or no ?[0m')
-                while True:
-                    ansres = input('')
-                    if ansres == 'no':
-                        Resume_Training = True
-                        del ansres
-                        break
-                    elif ansres == 'yes':
-                        Resume_Training = False
-                        resume = False
-                        break
-        except:
-            pass
-
         if Resume_Training and os.path.exists(OUTPUT_DIR + '/unet/diffusion_pytorch_model.bin'):
             MODELT_NAME = OUTPUT_DIR
-            print('[1;32mResuming Training...[0m')
+            print('恢复训练旧模型')
         elif Resume_Training and not os.path.exists(OUTPUT_DIR + '/unet/diffusion_pytorch_model.bin'):
-            print('[1;31mPrevious model not found, training a new model...[0m')
+            print('原来的模型没找到，训练新模型')
             MODELT_NAME = MODEL_NAME
 
         # @markdown ---------------------------
@@ -198,8 +179,7 @@ class DreamBooth():
         except:
             Contain_f = Contains_faces
 
-        Enable_text_encoder_training = True if param[
-                                                   "Enable_Text_Encoder_Training"].upper() == "TRUE" else False  # @param{type: 'boolean'}
+        Enable_text_encoder_training = True if str(param["Enable_Text_Encoder_Training"]).upper() == "TRUE" else False  # @param{type: 'boolean'}
 
         Train_text_encoder_for = int(param["Train_Text_Encoder_For"])  # @param{type: 'number'}
 
@@ -266,7 +246,7 @@ class DreamBooth():
             --lr_warmup_steps=0 \
             --max_train_steps={} \
             --num_class_images=200""".
-                      format(Caption, MODEL_NAME, INSTANCE_DIR, CLASS_DIR, OUTPUT_DIR, PT, Seed, precision,
+                      format(Caption, MODELT_NAME, INSTANCE_DIR, CLASS_DIR, OUTPUT_DIR, PT, Seed, precision,
                              Training_Steps))
 
         def unet_train(Caption, SESSION_DIR, stpsv, stp, MODELT_NAME, INSTANCE_DIR, OUTPUT_DIR, PT, Seed, precision,
@@ -332,13 +312,16 @@ class DreamBooth():
         if os.path.exists('/content/models/' + INSTANCE_NAME + '/unet/diffusion_pytorch_model.bin'):
             print("Almost done ...")
             os.chdir("""/content""")
-            os.system("""python /content/ai-travel/fast_stable_diffusion/convertosd.py {} {} {}""".format(OUTPUT_DIR,
-                                                                                                          SESSION_DIR,
-                                                                                                          Session_Name))
-            if os.path.exists(SESSION_DIR + "/" + INSTANCE_NAME + '.ckpt'):
+            os.system("""python /content/ai-travel/fast_stable_diffusion/convertosd.py {} {} {}""".format(OUTPUT_DIR,SESSION_DIR,Session_Name))
+            
+            ckpt_model_path=SESSION_DIR + "/" + INSTANCE_NAME + '.ckpt' 
+            if os.path.exists(ckpt_model_path):
                 if not os.path.exists(str(SESSION_DIR + '/tokenizer')):
                     os.system("""cp -R '/content/models/{}/tokenizer' {}""".format(INSTANCE_NAME, SESSION_DIR))
-                print("[1;32mDONE, the CKPT model is in your Gdrive in the sessions folder")
+                print("模型训练完成，ckpt模型路径："+ckpt_model_path)
+                print("上传模型到腾讯云cos")
+                os.system("""coscmd upload {} sd/models/""".format(ckpt_model_path))
+
             else:
                 print("[1;31mSomething went wrong")
 

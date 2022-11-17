@@ -2,56 +2,118 @@
   "code": 0,
   "message": null,
   "data": {
-    "id": 1,
-    "name": "\u6d4b\u8bd5AI\u753b\u753b",
+    "id": 3,
+    "name": "\u7533\u5029\u6a21\u578b",
     "original_album": [
       {
-        "url": "https:\/\/community.mafengwo.net\/mfs\/s19\/M00\/A1\/08\/CoNCfmNqCGNX91KiAAAOpAKr1LE.jpeg",
-        "name": "elonmuskmfwailab"
+        "url": "https:\/\/community.mafengwo.net\/img\/53\/5f\/eb4df749d74bd9e3a85bccfb9fe6cd1c.jpeg",
+        "name": "shenqianmfwailab"
       },
       {
-        "url": "https:\/\/community.mafengwo.net\/mfs\/s19\/M00\/FD\/07\/CoNE4WNqCGNLs833AAATie9uH0I.jpeg",
-        "name": "elonmuskmfwailab"
+        "url": "https:\/\/community.mafengwo.net\/img\/4e\/92\/f5144dc8489897093de75383f47379db.jpeg",
+        "name": "shenqianmfwailab"
       },
       {
-        "url": "https:\/\/community.mafengwo.net\/mfs\/s19\/M00\/A5\/EC\/CoNBHGNqCGMC1-f8AAAerrl_Opg.jpeg",
-        "name": "elonmuskmfwailab"
+        "url": "https:\/\/community.mafengwo.net\/img\/bf\/8b\/822d17181f0627f5f01aca76a1ed271f.jpeg",
+        "name": "shenqianmfwailab"
       },
       {
-        "url": "https:\/\/community.mafengwo.net\/mfs\/s19\/M00\/F3\/FB\/CoNBdGNqCGN7sBpeAAAWupoKt_I.jpeg",
-        "name": "elonmuskmfwailab"
+        "url": "https:\/\/community.mafengwo.net\/img\/c6\/11\/9e196c5b1a4c98bd02ef1074d5233f63.jpeg",
+        "name": "shenqianmfwailab"
       },
       {
-        "url": "https:\/\/community.mafengwo.net\/mfs\/s19\/M00\/B0\/29\/CoNJ72NqCGMxcxtVAAAQ7s0KY-Q.jpeg",
-        "name": "elonmuskmfwailab"
+        "url": "https:\/\/community.mafengwo.net\/img\/3f\/b6\/f55a952c161243ff36fd91fd3fae1c1f.jpeg",
+        "name": "shenqianmfwailab"
+      },
+      {
+        "url": "https:\/\/community.mafengwo.net\/img\/aa\/04\/991932bb18ce6090aa661e3a0ae0998c.jpeg",
+        "name": "shenqianmfwailab"
+      },
+      {
+        "url": "https:\/\/community.mafengwo.net\/img\/d4\/8d\/122a2834ef331c09ebdb56dca26a3830.jpeg",
+        "name": "shenqianmfwailab"
+      },
+      {
+        "url": "https:\/\/community.mafengwo.net\/img\/ef\/ad\/6d7481604c369467668723f77d145a94.jpeg",
+        "name": "shenqianmfwailab"
+      },
+      {
+        "url": "https:\/\/community.mafengwo.net\/img\/d6\/90\/3a0f618030210248c3c66febe7138b30.jpeg",
+        "name": "shenqianmfwailab"
+      },
+      {
+        "url": "https:\/\/community.mafengwo.net\/img\/bb\/00\/072b307707f65a1486824a075e37b132.jpeg",
+        "name": "shenqianmfwailab"
+      },
+      {
+        "url": "https:\/\/community.mafengwo.net\/img\/31\/0f\/95138284fb33a6375b25acce629e828d.jpeg",
+        "name": "shenqianmfwailab"
+      },
+      {
+        "url": "https:\/\/community.mafengwo.net\/img\/28\/0c\/20d77b5e56b1ef8b458e41b1ac38754f.jpeg",
+        "name": "shenqianmfwailab"
+      },
+      {
+        "url": "https:\/\/community.mafengwo.net\/img\/76\/20\/7e3d66224a36c4d73fa9cac767c373ca.jpeg",
+        "name": "shenqianmfwailab"
+      },
+      {
+        "url": "https:\/\/community.mafengwo.net\/img\/03\/b4\/fac735ceaade072b92c9b61c293d9716.jpeg",
+        "name": "shenqianmfwailab"
+      },
+      {
+        "url": "https:\/\/community.mafengwo.net\/img\/54\/44\/8ce2a1a039b9962bbd15fa5d78bbaaf5.jpeg",
+        "name": "shenqianmfwailab"
+      },
+      {
+        "url": "https:\/\/community.mafengwo.net\/img\/c7\/32\/0f51833618de85c9716edc2657c93c06.jpeg",
+        "name": "shenqianmfwailab"
+      },
+      {
+        "url": "https:\/\/community.mafengwo.net\/img\/ee\/f2\/55479d96eef3c641c8bd8775af78ea6b.jpeg",
+        "name": "shenqianmfwailab"
+      },
+      {
+        "url": "https:\/\/community.mafengwo.net\/img\/68\/32\/ab0cf0fed1b4302664c10f9d0b668d46.jpeg",
+        "name": "shenqianmfwailab"
+      },
+      {
+        "url": "https:\/\/community.mafengwo.net\/img\/d2\/76\/ba90213e26b925d98e0c0f6f7402846f.jpeg",
+        "name": "shenqianmfwailab"
+      },
+      {
+        "url": "https:\/\/community.mafengwo.net\/img\/65\/69\/63867179ea31a45631546b943b6b38f5.jpeg",
+        "name": "shenqianmfwailab"
       }
     ],
     "training_params": {
-      "Huggingface_Token": "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",
-      "Session_Name": "msk_face_model",
-      "Contains_Faces": "No", //["No", "Female", "Male", "Both"]
-      "Crop_Images": "true",
-      "Training_Steps": "500",
-      "Enable_Text_Encoder_Training": "true",
-      "Train_Text_Encoder_For": "35"
+      "Huggingface_Token": "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",
+      "Session_Name": "shenqianailab",
+      "Contains_Faces": "Female",
+      "Crop_Images": false,
+      "Training_Steps": "2000",
+      "Enable_Text_Encoder_Training": true,
+      "Train_Text_Encoder_For": 35,
+      "Resume_Training":true,
+      "Old_Model_Path":"msk_face_model"
     },
     "rendering_params": [
       {
-        "Name": "",
+        "Name": "ELSA\u98ce\u683c",
         "CKPT": "",
-        "Prompts": "",
-        "NegativePrompts": "",
+        "Prompts": "Young girl, slim face, pretty face,bright skin tone pretty bright shenqianmfwailab,plays as Elsa who plays disney frozen stands in front of Disney castle, highly detailed face,trending on pixiv, Artstation Hq,Beautiful wide angle, charming eyes,intricate details,hyperdetailed,sharp focus,trending on artstation,motherboard,3d render,golden ratio,by artgerm,Tom Bagshaw,Lawrence Alma-Tadema,greg rutkowski,Alphonse Mucha",
+        "NegativePrompts": "painting, drawing, sketch, robot eyes, cross-eyed, blurry, any shred of evidence, unrealistic expectations of magic, cartoon, 3d, disfigured, poorly drawn, extra limbs, b&w, weird colors, blurry:0.25, unreal engine, smooth skin.",
         "Sampling_Steps": "50",
         "Sampling_Method": "Euler a",
-        "Restore_Faces": "true",
+        "Restore_Faces": true,
         "Width": "512",
         "Height": "512",
-        "Batch_Count": "1",
+        "Batch_Count": "2",
         "Batch_Size": "8",
         "CFG_Scale": "7",
         "Seed": "-1",
         "Style": "None",
-        "Super_Resolution": "",
+        "Super_Resolution": false,
         "Super_Weight": "2048",
         "Super_Height": "2048"
       }

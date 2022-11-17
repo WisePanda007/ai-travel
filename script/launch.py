@@ -20,13 +20,11 @@ def main(argv):
     print("打印参数: ",param)
     training_param = param["data"]["training_params"]
     original_album_param=param["data"]["original_album"]
-    # 搭建环境
-    # x = Xformers(training_param)
 
-    # 图片格式转换
-
-    # 选择/下载模型
-    # d = DownloadModel(training_param)
+    # 删除旧模型及数据
+    os.system("""rm -rf /content/Fast-Dreambooth/Sessions""")
+    os.system("""rm -rf /content/models""")
+    os.system("""rm -rf /content/original_album""")
 
     # 模型训练
     db = DreamBooth(training_param, original_album_param)

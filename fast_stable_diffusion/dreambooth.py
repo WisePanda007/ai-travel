@@ -157,6 +157,7 @@ class DreamBooth():
 
         IMAGES_FOLDER_OPTIONAL = os.path.join("/content/original_album/", param["Session_Name"])
         os.system("mkdir -p " + IMAGES_FOLDER_OPTIONAL)
+        print("开始下载图片")
         for count, i in enumerate(original_album_param):
             url = i["url"]
             name = i["name"]
@@ -166,6 +167,7 @@ class DreamBooth():
             img = Image.open(img_path)
             img.save(img_path.rstrip(".jpeg") + ".jpg", "JPEG", quality=100, optimize=True, progressive=True)
             os.system('rm -rf "{}"'.format(img_path))
+        print("图片下载完成")
 
         Crop_images = True if str(param["Crop_Images"]).upper() == "TRUE" else False  # @param{type: 'boolean'}
         Crop_size = 512  # @param{type: 'number'}

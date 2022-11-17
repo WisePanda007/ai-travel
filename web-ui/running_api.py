@@ -84,7 +84,7 @@ def getParamRunningApi():
       header1 = {'content-type': 'application/json','User-agent':'Chrome/76.0.3809.132'}
       style = 'test_style'
       saved_url = 'https://www.mafengwo.cn/community/api/ai/saveOutputAlbum'
-      painting_id = 2
+      painting_id = param_data.get("id")
       saveOutputAlbum = []
 
       image_info = dict()

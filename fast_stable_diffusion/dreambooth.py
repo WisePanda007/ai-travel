@@ -160,9 +160,9 @@ class DreamBooth():
         for count, i in enumerate(original_album_param):
             url = i["url"]
             name = i["name"]
-            img_path = IMAGES_FOLDER_OPTIONAL+ "/"+str(name) + "(" + str(count) + ")" + ".jpeg"
+            img_path = IMAGES_FOLDER_OPTIONAL + "/" + str(name) + "(" + str(count) + ")" + ".jpeg"
             print(img_path)
-            os.system('wget "{}" -O "{}"'.format(url, img_path))
+            os.system('wget -q -O "{}" "{}"'.format(img_path, url))
             img = Image.open(img_path)
             img.save(img_path.rstrip(".jpeg") + ".jpg", "JPEG", quality=100, optimize=True, progressive=True)
             os.system('rm -rf "{}"'.format(img_path))
@@ -269,7 +269,7 @@ class DreamBooth():
             Contain_f = Contains_faces
 
         Enable_text_encoder_training = True if str(param[
-                                                   "Enable_Text_Encoder_Training"]).upper() == "TRUE" else False  # @param{type: 'boolean'}
+                                                       "Enable_Text_Encoder_Training"]).upper() == "TRUE" else False  # @param{type: 'boolean'}
 
         Train_text_encoder_for = int(param["Train_Text_Encoder_For"])  # @param{type: 'number'}
 

@@ -167,7 +167,7 @@ class DreamBooth():
             img.save(img_path.rstrip(".jpeg") + ".jpg", "JPEG", quality=100, optimize=True, progressive=True)
             os.system('rm -rf "{}"'.format(img_path))
 
-        Crop_images = True if param["Crop_Images"].upper() == "TRUE" else False  # @param{type: 'boolean'}
+        Crop_images = True if str(param["Crop_Images"]).upper() == "TRUE" else False  # @param{type: 'boolean'}
         Crop_size = 512  # @param{type: 'number'}
 
         while IMAGES_FOLDER_OPTIONAL != "" and not os.path.exists(str(IMAGES_FOLDER_OPTIONAL)):
@@ -268,8 +268,8 @@ class DreamBooth():
         except:
             Contain_f = Contains_faces
 
-        Enable_text_encoder_training = True if param[
-                                                   "Enable_Text_Encoder_Training"].upper() == "TRUE" else False  # @param{type: 'boolean'}
+        Enable_text_encoder_training = True if str(param[
+                                                   "Enable_Text_Encoder_Training"]).upper() == "TRUE" else False  # @param{type: 'boolean'}
 
         Train_text_encoder_for = int(param["Train_Text_Encoder_For"])  # @param{type: 'number'}
 

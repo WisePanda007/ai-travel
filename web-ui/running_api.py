@@ -51,7 +51,7 @@ def getParamRunningApi():
           prompt = rendering_params["Prompts"],
           negative_prompt = rendering_params["NegativePrompts"],
           sampler_index = rendering_params["Sampling_Method"],
-          restore_faces = True if rendering_params['Restore_Faces'].upper()=="TRUE" else False,
+          restore_faces = True if str(rendering_params['Restore_Faces']).upper()=="TRUE" else False,
           width = int(rendering_params['Width']),
           height = int(rendering_params['Height']),
           n_iter = int(rendering_params['Batch_Count']),

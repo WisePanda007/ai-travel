@@ -1,3 +1,4 @@
+import random
 import threading
 import sys
 sys.path.append("/content/stable-diffusion-webui/")
@@ -40,6 +41,7 @@ def getParamRunningApi():
     _id = param_data.get("id")
 
     rendering_params_list = (param_data.get("rendering_params"))
+    print("rendering_params")
     for rendering_params in rendering_params_list:
       api = webuiapi.WebUIApi(host='127.0.0.1', port=7861)
       result1 = ()
@@ -49,13 +51,13 @@ def getParamRunningApi():
           prompt = rendering_params["Prompts"],
           negative_prompt = rendering_params["NegativePrompts"],
           sampler_index = rendering_params["Sampling_Method"],
-          restore_faces = rendering_params['Restore_Faces'],
+          restore_faces = True if rendering_params['Restore_Faces'].upper()=="TRUE" else False,
           width = int(rendering_params['Width']),
           height = int(rendering_params['Height']),
           n_iter = int(rendering_params['Batch_Count']),
           batch_size = int(rendering_params['Batch_Size']),
           cfg_scale = int(rendering_params['CFG_Scale']),
-          seed = int(rendering_params['Seed'])
+          seed = random.randint(1,999999) if int(rendering_params['Seed'])==-1 else int(rendering_params['Seed'])
           # styles = rendering_params['Style']
         )
       else:

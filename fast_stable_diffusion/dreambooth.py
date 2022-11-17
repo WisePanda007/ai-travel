@@ -35,13 +35,7 @@ class DreamBooth():
                         os.system("""mkdir -p {}""".format(CLASS_DIR))
                     os.chdir(CLASS_DIR)
                     os.system("""rm -rf Women Men Mix""")
-                    os.system(
-                        """wget -q -O Womenz 'https://github.com/TheLastBen/fast-stable-diffusion/raw/main/Dreambooth/Regularization/Women'""")
-                    os.system(
-                        """wget -q -O Menz 'https://github.com/TheLastBen/fast-stable-diffusion/raw/main/Dreambooth/Regularization/Men'""")
-                    os.system(
-                        """wget -q -O Mixz 'https://github.com/TheLastBen/fast-stable-diffusion/raw/main/Dreambooth/Regularization/Mix'""")
-                    os.system("""unzip Menz > /dev/null 2>&1""")
+                    os.system("""mv /content/Fast-Dreambooth/Regularization_images/* ./""") os.system("""unzip Menz > /dev/null 2>&1""")
                     os.system("""unzip Womenz > /dev/null 2>&1""")
                     os.system("""unzip Mixz > /dev/null 2>&1""")
                     # os.system("""rm -rf Menz Womenz Mixz""")

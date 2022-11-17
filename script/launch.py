@@ -1,9 +1,9 @@
 import sys
-
-
+import os
+os.environ['MKL_THREADING_LAYER'] = 'GNU'
 sys.path.append("/content/ai-travel/")
 import demjson
-import os
+import torch
 from utils.xformers import Xformers
 from utils.download_model import DownloadModel
 from fast_stable_diffusion.dreambooth import DreamBooth
@@ -26,7 +26,7 @@ def main(argv):
     # 图片格式转换
 
     # 选择/下载模型
-    d = DownloadModel(training_param)
+    # d = DownloadModel(training_param)
 
     # 模型训练
     db = DreamBooth(training_param, original_album_param)

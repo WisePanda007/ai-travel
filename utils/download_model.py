@@ -21,7 +21,7 @@ class DownloadModel():
             os.system("""mkdir -p /content/stable-diffusion-v1-5""")
             os.chdir("""/content/stable-diffusion-v1-5""")
             os.system("""git init""")
-            os.system("""git lfs install --force --system --skip-repo""")
+            os.system("""sudo git lfs install --force --system --skip-repo""")
             os.system(
                 'git remote add -f origin  "https://USER:{}@huggingface.co/runwayml/stable-diffusion-v1-5"'.format(
                     token))

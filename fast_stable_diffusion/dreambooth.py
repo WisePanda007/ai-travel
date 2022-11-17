@@ -10,59 +10,13 @@ class DreamBooth():
         from IPython.display import clear_output
         import random
 
-        def fdownloadmodel():
-            token = input("Insert your huggingface token :")
-            os.chdir("""/content/""")
-            os.system("""mkdir /content/stable-diffusion-v1-5""")
-            os.chdir("""/content/stable-diffusion-v1-5""")
-            os.system("""git init""")
-            os.system("""git lfs install --force --system --skip-repo""")
-            os.system(
-                """git remote add -f origin  'https://USER:{}@huggingface.co/runwayml/stable-diffusion-v1-5'""".format(
-                    token))
-            os.system("""git config core.sparsecheckout true""")
-            os.system(
-                """echo "feature_extractor\nsafety_checker\nscheduler\ntext_encoder\ntokenizer\nunet\nmodel_index.json" > .git/info/sparse-checkout""")
-            os.system("""git pull origin main""")
-            if os.path.exists('/content/stable-diffusion-v1-5/unet/diffusion_pytorch_model.bin'):
-                os.system("""git clone 'https://USER:{}@huggingface.co/stabilityai/sd-vae-ft-mse'""".format(token))
-                os.system("""mv /content/stable-diffusion-v1-5/sd-vae-ft-mse /content/stable-diffusion-v1-5/vae""")
-                os.system("""rm -r /content/stable-diffusion-v1-5/.git""")
-                os.chdir("""/content/""")
-                clear_output()
 
         MODEL_NAME = "/content/stable-diffusion-v1-5"
         PT = ""
-
         Captionned_instance_images = True
-
         Session_Name = param["Session_Name"]  # @param{type: 'string'}
-        while Session_Name == "":
-            print('[1;31mInput the Session Name:')
-            Session_Name = input('')
         Session_Name = Session_Name.replace(" ", "_")
-
-        Session_Link_optional = ""  # @param{type: 'string'}
-
         WORKSPACE = '/content/Fast-Dreambooth'
-
-        if Session_Link_optional != "":
-            print('[1;32mDownloading session...')
-        with capture.capture_output() as cap:
-            os.chdir("""/content""")
-            # if Session_Link_optional != "":
-            #     if not os.path.exists(str(WORKSPACE + '/Sessions')):
-            #         os.system("mkdir -p " + str(WORKSPACE + '/Sessions'))
-            #         time.sleep(1)
-            #     os.chdir(str(WORKSPACE + '/Sessions'))
-            #     os.system("""gdown --folder --remaining-ok -O {} {} """.format(Session_Name, Session_Link_optional))
-            #     os.chdir(Session_Name)
-            #     os.system("""rm -r instance_images""")
-            #     os.system("""rm -r Regularization_images""")
-            #     os.system("""unzip instance_images.zip""")
-            #     os.system("""rm instance_images.zip""")
-            #     os.system("""mv *.ckpt {}.ckpt""".format(Session_Name))
-            #     os.chdir("""/content""")
 
         INSTANCE_NAME = Session_Name
         OUTPUT_DIR = "/content/models/" + Session_Name
@@ -74,25 +28,18 @@ class DreamBooth():
         Contains_faces = param["Contains_Faces"]  # @param ["No", "Female", "Male", "Both"]
 
         def reg(CLASS_DIR):
-            with capture.capture_output() as cap:
-                if Contains_faces != "No":
-                    if not os.path.exists(str(CLASS_DIR)):
-                        os.system("""mkdir -p {}""".format(CLASS_DIR))
-                    os.chdir(CLASS_DIR)
-                    os.system("""rm -rf Women Men Mix""")
-                    os.system(
-                        """wget -p -O Womenz 'https://github.com/TheLastBen/fast-stable-diffusion/raw/main/Dreambooth/Regularization/Women'""")
-                    os.system(
-                        """wget -p -O Menz 'https://github.com/TheLastBen/fast-stable-diffusion/raw/main/Dreambooth/Regularization/Men'""")
-                    os.system(
-                        """wget -p -O Mixz 'https://github.com/TheLastBen/fast-stable-diffusion/raw/main/Dreambooth/Regularization/Mix'""")
-                    os.system("""unzip Menz""")
-                    os.system("""unzip Womenz""")
-                    os.system("""unzip Mixz""")
-                    os.system("""rm -rf Menz Womenz Mixz""")
-                    os.system("""find . -name "* *" -type f | rename 's/ /_/g'""")  # 注意
-                    os.chdir("""/content""")
-                    clear_output()
+            if Contains_faces != "No":
+                if not os.path.exists(str(CLASS_DIR)):
+                    os.system("""mkdir -p {}""".format(CLASS_DIR))
+                os.chdir(CLASS_DIR)
+                os.system("""rm -rf Women Men Mix""")
+                os.system("""mv /content/Fast-Dreambooth/Regularization_images/* ./""")
+                os.system("""unzip Menz""")
+                os.system("""unzip Womenz""")
+                os.system("""unzip Mixz""")
+                os.system("""rm -rf Menz Womenz Mixz""")
+                os.system("""find . -name "* *" -type f | rename 's/ /_/g'""")  # 注意
+                os.chdir("""/content""")
 
         if os.path.exists(str(SESSION_DIR)) and not os.path.exists(str(SESSION_DIR + "/" + Session_Name + '.ckpt')):
             print(
@@ -169,52 +116,34 @@ class DreamBooth():
         IMAGES_FOLDER_OPTIONAL = path  # @param{type: 'string'}
 
         Crop_images = True if param["Crop_Images"].upper() == "TRUE" else False  # @param{type: 'boolean'}
-        Crop_size = 512  # @param{type: 'number'}
 
-        while IMAGES_FOLDER_OPTIONAL != "" and not os.path.exists(str(IMAGES_FOLDER_OPTIONAL)):
-            print('[1;31mThe image folder specified does not exist, use the colab file explorer to copy the path :')
-            IMAGES_FOLDER_OPTIONAL = input('')
 
         if IMAGES_FOLDER_OPTIONAL != "":
-            with capture.capture_output() as cap:
-                if Crop_images:
-                    print("开始人脸裁剪")
-                    for filename in os.listdir(IMAGES_FOLDER_OPTIONAL):
-                        recoFace.crop_img(os.path.join(IMAGES_FOLDER_OPTIONAL, filename))
-                        os.system('cp -r "{}/." "{}"'.format(IMAGES_FOLDER_OPTIONAL, INSTANCE_DIR))
-                    print("人脸裁剪完成")
-                else:
+            if Crop_images:
+                print("开始人脸裁剪")
+                for filename in os.listdir(IMAGES_FOLDER_OPTIONAL):
+                    recoFace.crop_img(os.path.join(IMAGES_FOLDER_OPTIONAL, filename))
                     os.system('cp -r "{}/." "{}"'.format(IMAGES_FOLDER_OPTIONAL, INSTANCE_DIR))
+                print("人脸裁剪完成")
+            else:
+                os.system('cp -r "{}/." "{}"'.format(IMAGES_FOLDER_OPTIONAL, INSTANCE_DIR))
 
-                os.chdir(INSTANCE_DIR)
-                os.system("""find . -name "* *" -type f | rename 's/ /_/g'""")  # 注意
-                os.chdir("""/content""")
-                if os.path.exists(INSTANCE_DIR + "/.ipynb_checkpoints"):
-                    os.system("""rm -r """ + INSTANCE_DIR + "/.ipynb_checkpoints")
+            os.chdir(INSTANCE_DIR)
+            os.system("""find . -name "* *" -type f | rename 's/ /_/g'""")  # 注意
+            os.chdir("""/content""")
+            if os.path.exists(INSTANCE_DIR + "/.ipynb_checkpoints"):
+                os.system("""rm -r """ + INSTANCE_DIR + "/.ipynb_checkpoints")
             print('[1;32mDone, proceed to the training cell')
 
-        with capture.capture_output() as cap:
-            os.chdir(SESSION_DIR)
-            os.system("""rm -rf instance_images.zip""")
-            os.system("""zip -r instance_images instance_images""")
-            os.chdir("""/content""")
+        os.chdir(SESSION_DIR)
+        os.system("""rm -rf instance_images.zip""")
+        os.system("""zip -r instance_images instance_images""")
+        os.chdir("""/content""")
 
         Resume_Training = False  # @param {type:"boolean"}
 
-        if not Resume_Training and not os.path.exists(
-                '/content/stable-diffusion-v1-5/unet/diffusion_pytorch_model.bin'):
-            if os.path.exists('/content/stable-diffusion-v1-5'):
-                os.system("""rm -rf '/content/stable-diffusion-v1-5'""")
-            print('[1;31mOriginal model not found, downloading....[0m')
-            fdownloadmodel()
-            if os.path.exists('/content/stable-diffusion-v1-5/unet/diffusion_pytorch_model.bin'):
-                print('[1;32mModel downloaded, proceeding to training...')
-            else:
-                print(
-                    '[1;31mError downloading the model, make sure you have accepted the terms at https://huggingface.co/runwayml/stable-diffusion-v1-5')
 
         MODELT_NAME = MODEL_NAME
-
         Training_Steps = int(param["Training_Steps"])  # @param{type: 'number'}
 
         Seed = ''  # @param{type: 'string'}
@@ -233,8 +162,8 @@ class DreamBooth():
             prec = "no"
 
         s = getoutput('nvidia-smi')
-
         precision = prec
+
 
         try:
             resume

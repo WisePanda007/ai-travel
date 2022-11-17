@@ -54,6 +54,25 @@
         "Super_Resolution": "",
         "Super_Weight": "2048",
         "Super_Height": "2048"
+      },
+      {
+        "Name": "",
+        "CKPT": "",
+        "Prompts": "",
+        "NegativePrompts": "",
+        "Sampling_Steps": "50",
+        "Sampling_Method": "Euler a",
+        "Restore_Faces": "true",
+        "Width": "512",
+        "Height": "512",
+        "Batch_Count": "1",
+        "Batch_Size": "8",
+        "CFG_Scale": "7",
+        "Seed": "-1",
+        "Style": "None",
+        "Super_Resolution": "",
+        "Super_Weight": "2048",
+        "Super_Height": "2048"
       }
     ]
   }

@@ -12,7 +12,7 @@ import urllib.request
 
 def main(argv):
     print("开始运行")
-    param = demjson.decode_file("ai-travel/config/config_demo.json")
+    param = demjson.decode_file("/content/ai-travel/config/config_demo.json")
 
     if len(argv) >= 1:
         param = demjson.decode(urllib.request.urlopen(argv[0]).read())

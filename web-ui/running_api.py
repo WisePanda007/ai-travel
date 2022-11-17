@@ -32,6 +32,8 @@ def getParamRunningApi():
   _steps=20,
   _sampler_index='DDIM'
 
+
+  param = demjson.decode_file("/content/ai-travel/config/config_demo.json")
   if len(argv) >= 1:
     param = demjson.decode(urllib.request.urlopen(argv[0]).read())
     param_data = param.get("data")

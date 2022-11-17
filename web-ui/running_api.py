@@ -41,7 +41,7 @@ def getParamRunningApi():
     _id = param_data.get("id")
 
     rendering_params_list = (param_data.get("rendering_params"))
-    print("rendering_params")
+    print(rendering_params_list)
     for rendering_params in rendering_params_list:
       api = webuiapi.WebUIApi(host='127.0.0.1', port=7861)
       result1 = ()

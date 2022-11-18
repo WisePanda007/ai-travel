@@ -9,6 +9,9 @@ class DreamBooth():
         from subprocess import getoutput
         from IPython.display import clear_output
         import random
+        import transformers
+        transformers.logging.set_verbosity_error()
+        
 
         Session_Name = param["Session_Name"]  # @param{type: 'string'}
         Contains_faces = param["Contains_Faces"]  # @param ["No", "Female", "Male", "Both"]
@@ -35,11 +38,12 @@ class DreamBooth():
                         os.system("""mkdir -p {}""".format(CLASS_DIR))
                     os.chdir(CLASS_DIR)
                     os.system("""rm -rf Women Men Mix""")
-                    os.system("""mv /content/Fast-Dreambooth/Regularization_images/* ./""")
+                    os.system("""cp -r /content/Fast-Dreambooth/Regularization_images/* ./""")
                     os.system("""unzip Menz > /dev/null 2>&1""")
                     os.system("""unzip Womenz > /dev/null 2>&1""")
                     os.system("""unzip Mixz > /dev/null 2>&1""")
                     # os.system("""rm -rf Menz Womenz Mixz""")
+                    os.system("""sudo chmod -R 777 /content""")
                     os.system("""find . -name "* *" -type f | rename 's/ /_/g'""")  # 注意
                     os.chdir("""/content""")
                     clear_output()

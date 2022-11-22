@@ -1,4 +1,4 @@
-# @markdown #Create/Load a Session
+#更新至11.22
 class DreamBooth():
     def __init__(self, param, original_album_param):
         import os
@@ -15,8 +15,13 @@ class DreamBooth():
 
         Session_Name = param["Session_Name"]  # @param{type: 'string'}
         Contains_faces = param["Contains_Faces"]  # @param ["No", "Female", "Male", "Both"]
-        Resume_Training = param["Resume_Training"]  # @param {type:"boolean"}
-        Old_Model_Path = param["Old_Model_Path"] 
+        Contains_faces = "No"  # @param ["No", "Female", "Male", "Both"]
+
+        Resume_Training = param.get("Resume_Training")  # @param {type:"boolean"}
+        Old_Model_Path = param.get("Old_Model_Path")
+
+        # Resume_Training = True  # @param {type:"boolean"}
+        # Old_Model_Path = "chuanjianguo_face_model"
 
         MODEL_NAME = "/content/stable-diffusion-v1-5"
         PT = ""
@@ -316,7 +321,7 @@ class DreamBooth():
             ckpt_model_path=SESSION_DIR + "/" + INSTANCE_NAME + '.ckpt' 
             if os.path.exists(ckpt_model_path):
                 if not os.path.exists(str(SESSION_DIR + '/tokenizer')):
-                    os.system("""cp -R '/content/models/{}/tokenizer' {}""".format(INSTANCE_NAME, SESSION_DIR))
+                    os.system("""cp -r '/content/models/{}/tokenizer' {}""".format(INSTANCE_NAME, SESSION_DIR))
                 print("模型训练完成，ckpt模型路径："+ckpt_model_path)
                 print("上传模型到腾讯云cos")
                 os.system("""coscmd upload {} sd/models/""".format(ckpt_model_path))

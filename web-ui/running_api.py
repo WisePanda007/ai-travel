@@ -1,4 +1,5 @@
 import json
+import multiprocessing
 import requests
 from PIL import Image
 import webuiapi
@@ -7,12 +8,11 @@ import demjson
 import time
 import os
 import random
-import threading
 import sys
 sys.path.append("/content/stable-diffusion-webui/")
 
 
-def web_api():
+def fun1():
     os.system("python /content/stable-diffusion-webui/webui.py|tee /content/api.log")
 
 
@@ -89,6 +89,7 @@ def generate_img(rendering_params, task_id):
 
 
 def downloadModel(models):
+    #下载所有需要的模型
     for ckpt_Path in models:
         cos_path = "sd/models/" + \
             ckpt_Path if ckpt_Path[:3] != "sd/" else ckpt_Path
@@ -119,31 +120,43 @@ def main(argv):
 
     rendering_params_list = (param.get("rendering_params"))
 
+    os.system("""echo "准备开始渲染" |tee /content/api.log""")
     for rendering_params in rendering_params_list:
         # 开始执行渲染任务
-        thread1 = threading.Thread(name='t1', target=web_api, args=())
-
         ckptname = rendering_params["CKPT"].split(
             "/")[-1].rstrip(".ckpt")+".ckpt"
-        os.system("""echo "准备开始渲染" |tee /content/api.log""")
+        sleep_time = 150
 
         with open('/content/api.log', encoding='utf-8') as file:
-            content1 = file.read()
-            if ckptname not in content1:
-                sleep_time = 150
+            content = file.read()
+            if ".ckpt" not in content and ckptname == "":
+                #没输入ckpt的情况下加载上次训练好的模型
+                print("加载模型{}，等待{}s ".format(ckptname, str(sleep_time)))
+                os.system(
+                    "rm -rf /content/stable-diffusion-webui/models/Stable-diffusion/*")
+                os.system("""sudo chmod -R 777 /content""")
+                os.system(
+                    """find /content/Fast-Dreambooth/Sessions -name "*.ckpt" | xargs -i cp -r {} /content/stable-diffusion-webui/models/Stable-diffusion/""")
+                process = multiprocessing.Process(target=fun1, args=())
+                process.start()
+                time.sleep(sleep_time)
+            elif ckptname not in content:
+                #输入ckpt的情况下，如果该模型没有被加载，加载该模型
                 print("加载模型{}，等待{}s ".format(ckptname, str(sleep_time)))
                 os.system(
                     "rm -rf /content/stable-diffusion-webui/models/Stable-diffusion/*")
                 os.system("""sudo chmod -R 777 /content""")
                 os.system(
                     "cp /content/models/{} /content/stable-diffusion-webui/models/Stable-diffusion/".format(ckptname))
-                thread1.start()
+                process = multiprocessing.Process(target=fun1, args=())
+                process.start()
                 time.sleep(sleep_time)
+
             else:
                 pass
         print("开始渲染")
         generate_img(rendering_params, param["id"])
-    exit(0)
+        process.terminate()
 
 
 if __name__ == "__main__":

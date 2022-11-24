@@ -1,4 +1,4 @@
-#更新至11.22
+# 更新至11.22
 class DreamBooth():
     def __init__(self, param, original_album_param):
         import os
@@ -11,17 +11,16 @@ class DreamBooth():
         import random
         import transformers
         transformers.logging.set_verbosity_error()
-        
 
-        Session_Name = param["Session_Name"]  # @param{type: 'string'}
-        Contains_faces = param["Contains_Faces"]  # @param ["No", "Female", "Male", "Both"]
-        Contains_faces = "No"  # @param ["No", "Female", "Male", "Both"]
+        Session_Name = param["Model_Name"]  # @param{type: 'string'}
+        # @param ["No", "Female", "Male", "Both"]
+        Contains_faces = param["Contains_Faces"] 
+        #it doesn't improve faces, it reduces overfitting, but if you set the text_encoder at a low value, there won't be overfitting
 
-        Resume_Training = param.get("Resume_Training")  # @param {type:"boolean"}
-        Old_Model_Path = param.get("Old_Model_Path")
-
-        # Resume_Training = True  # @param {type:"boolean"}
-        # Old_Model_Path = "chuanjianguo_face_model"
+        # Contains_faces = "No"  # @param ["No", "Female", "Male", "Both"]
+        Training_Steps = int(param["Training_Steps"])  # @param{type: 'number'}
+        Resume_Training = param.get("Training_Type").upper()
+        Old_Model_Path = param.get("Old_Model_Name")
 
         MODEL_NAME = "/content/stable-diffusion-v1-5"
         PT = ""
@@ -35,7 +34,6 @@ class DreamBooth():
         MDLPTH = str(SESSION_DIR + "/" + Session_Name + '.ckpt')
         CLASS_DIR = SESSION_DIR + '/Regularization_images'
 
-
         def reg(CLASS_DIR):
             with capture.capture_output() as cap:
                 if Contains_faces != "No":
@@ -43,22 +41,28 @@ class DreamBooth():
                         os.system("""mkdir -p {}""".format(CLASS_DIR))
                     os.chdir(CLASS_DIR)
                     os.system("""rm -rf Women Men Mix""")
-                    os.system("""cp -r /content/Fast-Dreambooth/Regularization_images/* ./""")
+                    os.system(
+                        """cp -r /content/Fast-Dreambooth/Regularization_images/* ./""")
                     os.system("""unzip Menz > /dev/null 2>&1""")
                     os.system("""unzip Womenz > /dev/null 2>&1""")
                     os.system("""unzip Mixz > /dev/null 2>&1""")
                     # os.system("""rm -rf Menz Womenz Mixz""")
                     os.system("""sudo chmod -R 777 /content""")
-                    os.system("""find . -name "* *" -type f | rename 's/ /_/g'""")  # 注意
+                    os.system(
+                        """find . -name "* *" -type f | rename 's/ /_/g'""")  # 注意
                     os.chdir("""/content""")
                     clear_output()
 
-        if Resume_Training:
-            cos_path="sd/models/"+Old_Model_Path if Old_Model_Path[:10]!="sd/models/" else Old_Model_Path
-            cos_path=cos_path+".ckpt" if cos_path.rstrip()[-5]!=".ckpt" else cos_path
+        if Resume_Training == "RESUME_TRAINING":
+            cos_path = "sd/models/" + \
+                Old_Model_Path if Old_Model_Path[:
+                                                 3] != "sd/" else Old_Model_Path
+            cos_path = cos_path + \
+                ".ckpt" if cos_path.rstrip()[-5] != ".ckpt" else cos_path
 
             print("下载旧模型: "+cos_path)
-            os.system("""coscmd download {} {}""".format(cos_path,str(SESSION_DIR + "/" + Session_Name + '.ckpt')))
+            os.system("""coscmd download {} {}""".format(
+                cos_path, str(SESSION_DIR + "/" + Session_Name + '.ckpt')))
 
         if os.path.exists(str(SESSION_DIR + "/" + Session_Name + '.ckpt')):
             print('加载旧模型')
@@ -81,10 +85,10 @@ class DreamBooth():
             os.system("""mkdir -p """ + INSTANCE_DIR)
             print('[1;32mCreating session...')
             reg(CLASS_DIR)
-            if not os.path.exists('/content/stable-diffusion-v1-5/unet/diffusion_pytorch_model.bin'):
-                if os.path.exists('/content/stable-diffusion-v1-5'):
-                    os.system("""rm -rf '/content/stable-diffusion-v1-5'""")
-                fdownloadmodel()
+            # if not os.path.exists('/content/stable-diffusion-v1-5/unet/diffusion_pytorch_model.bin'):
+            #     if os.path.exists('/content/stable-diffusion-v1-5'):
+            #         os.system("""rm -rf '/content/stable-diffusion-v1-5'""")
+            #     fdownloadmodel()
             if os.path.exists('/content/stable-diffusion-v1-5/unet/diffusion_pytorch_model.bin'):
                 print('[1;32mSession created, proceed to uploading instance images')
             else:
@@ -107,35 +111,41 @@ class DreamBooth():
         if not os.path.exists(str(INSTANCE_DIR)):
             os.system("""mkdir -p """ + INSTANCE_DIR)
 
-        IMAGES_FOLDER_OPTIONAL = os.path.join("/content/original_album/", param["Session_Name"])
+        IMAGES_FOLDER_OPTIONAL = os.path.join(
+            "/content/original_album/", param["Model_Name"])
         os.system("mkdir -p " + IMAGES_FOLDER_OPTIONAL)
         print("开始下载图片")
         for count, i in enumerate(original_album_param):
             url = i["url"]
             name = i["name"]
-            img_path = IMAGES_FOLDER_OPTIONAL + "/" + str(name) + "(" + str(count+1) + ")" + ".jpeg"
+            img_path = IMAGES_FOLDER_OPTIONAL + "/" + \
+                str(name) + "(" + str(count+1) + ")" + ".jpeg"
             print(img_path)
             os.system('wget -q -O "{}" "{}"'.format(img_path, url))
             img = Image.open(img_path)
-            img.save(img_path.rstrip(".jpeg") + ".jpg", "JPEG", quality=100, optimize=True, progressive=True)
+            img.save(img_path.rstrip(".jpeg") + ".jpg", "JPEG",
+                     quality=100, optimize=True, progressive=True)
             os.system('rm -rf "{}"'.format(img_path))
         print("图片下载完成")
 
-        Crop_images = True if str(param["Crop_Images"]).upper() == "TRUE" else False  # @param{type: 'boolean'}
-
+        Crop_images = True if str(param["Crop_Images"]).upper(
+        ) == "TRUE" else False  # @param{type: 'boolean'}
 
         if IMAGES_FOLDER_OPTIONAL != "":
             if Crop_images:
                 print("开始人脸裁剪")
                 for filename in os.listdir(IMAGES_FOLDER_OPTIONAL):
-                    recoFace.crop_img(os.path.join(IMAGES_FOLDER_OPTIONAL, filename))
+                    recoFace.crop_img(os.path.join(
+                        IMAGES_FOLDER_OPTIONAL, filename))
                 print("人脸裁剪完成")
-                os.system('cp -r "{}/." "{}"'.format(IMAGES_FOLDER_OPTIONAL, INSTANCE_DIR))
+                os.system(
+                    'cp -r "{}/." "{}"'.format(IMAGES_FOLDER_OPTIONAL, INSTANCE_DIR))
             else:
-                os.system('cp -r "{}/." "{}"'.format(IMAGES_FOLDER_OPTIONAL, INSTANCE_DIR))
+                os.system(
+                    'cp -r "{}/." "{}"'.format(IMAGES_FOLDER_OPTIONAL, INSTANCE_DIR))
 
             os.chdir(INSTANCE_DIR)
-            os.system("""find . -name "* *" -type f | rename 's/ /_/g'""") 
+            os.system("""find . -name "* *" -type f | rename 's/ /_/g'""")
             os.chdir("""/content""")
             if os.path.exists(INSTANCE_DIR + "/.ipynb_checkpoints"):
                 os.system("""rm -r """ + INSTANCE_DIR + "/.ipynb_checkpoints")
@@ -147,7 +157,6 @@ class DreamBooth():
         os.chdir("""/content""")
 
         MODELT_NAME = MODEL_NAME
-        Training_Steps = int(param["Training_Steps"])  # @param{type: 'number'}
 
         Seed = ''  # @param{type: 'string'}
 
@@ -167,12 +176,11 @@ class DreamBooth():
         s = getoutput('nvidia-smi')
         precision = prec
 
-
-        if Resume_Training and os.path.exists(OUTPUT_DIR + '/unet/diffusion_pytorch_model.bin'):
+        if Resume_Training == "RESUME_TRAINING" and os.path.exists(OUTPUT_DIR + '/unet/diffusion_pytorch_model.bin'):
             MODELT_NAME = OUTPUT_DIR
-            print('恢复训练旧模型')
-        elif Resume_Training and not os.path.exists(OUTPUT_DIR + '/unet/diffusion_pytorch_model.bin'):
-            print('原来的模型没找到，训练新模型')
+            print('在旧模型的基础上训练新模型')
+        elif Resume_Training == "RESUME_TRAINING" and not os.path.exists(OUTPUT_DIR + '/unet/diffusion_pytorch_model.bin'):
+            print('旧模型没找到，直接训练新模型')
             MODELT_NAME = MODEL_NAME
 
         # @markdown ---------------------------
@@ -183,9 +191,11 @@ class DreamBooth():
         except:
             Contain_f = Contains_faces
 
-        Enable_text_encoder_training = True if str(param["Enable_Text_Encoder_Training"]).upper() == "TRUE" else False  # @param{type: 'boolean'}
+        Enable_text_encoder_training = True if str(param["Enable_Text_Encoder_Training"]).upper(
+        ) == "TRUE" else False  # @param{type: 'boolean'}
 
-        Train_text_encoder_for = int(param["Train_Text_Encoder_For"])  # @param{type: 'number'}
+        Train_text_encoder_for = int(
+            param["Train_Text_Encoder_For"])  # @param{type: 'number'}
 
         if Train_text_encoder_for >= 100:
             stptxt = Training_Steps
@@ -316,15 +326,18 @@ class DreamBooth():
         if os.path.exists('/content/models/' + INSTANCE_NAME + '/unet/diffusion_pytorch_model.bin'):
             print("Almost done ...")
             os.chdir("""/content""")
-            os.system("""python /content/ai-travel/fast_stable_diffusion/convertosd.py {} {} {}""".format(OUTPUT_DIR,SESSION_DIR,Session_Name))
-            
-            ckpt_model_path=SESSION_DIR + "/" + INSTANCE_NAME + '.ckpt' 
+            os.system("""python /content/ai-travel/fast_stable_diffusion/convertosd.py {} {} {}""".format(
+                OUTPUT_DIR, SESSION_DIR, Session_Name))
+
+            ckpt_model_path = SESSION_DIR + "/" + INSTANCE_NAME + '.ckpt'
             if os.path.exists(ckpt_model_path):
                 if not os.path.exists(str(SESSION_DIR + '/tokenizer')):
-                    os.system("""cp -r '/content/models/{}/tokenizer' {}""".format(INSTANCE_NAME, SESSION_DIR))
+                    os.system(
+                        """cp -r '/content/models/{}/tokenizer' {}""".format(INSTANCE_NAME, SESSION_DIR))
                 print("模型训练完成，ckpt模型路径："+ckpt_model_path)
                 print("上传模型到腾讯云cos")
-                os.system("""coscmd upload {} sd/models/""".format(ckpt_model_path))
+                os.system(
+                    """coscmd upload {} sd/models/""".format(ckpt_model_path))
 
             else:
                 print("[1;31mSomething went wrong")

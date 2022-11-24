@@ -36,7 +36,7 @@ class DreamBooth():
 
         Captionned_instance_images = True
 
-        Session_Name = param["Session_Name"]  # @param{type: 'string'}
+        Session_Name = param["Model_Name"]  # @param{type: 'string'}
         while Session_Name == "":
             print('[1;31mInput the Session Name:')
             Session_Name = input('')
@@ -155,7 +155,7 @@ class DreamBooth():
         if not os.path.exists(str(INSTANCE_DIR)):
             os.system("""mkdir -p """ + INSTANCE_DIR)
 
-        IMAGES_FOLDER_OPTIONAL = os.path.join("/content/original_album/", param["Session_Name"])
+        IMAGES_FOLDER_OPTIONAL = os.path.join("/content/original_album/", param["Model_Name"])
         os.system("mkdir -p " + IMAGES_FOLDER_OPTIONAL)
         print("开始下载图片")
         for count, i in enumerate(original_album_param):

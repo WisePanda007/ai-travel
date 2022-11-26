@@ -128,8 +128,7 @@ def main(argv):
     for rendering_params in rendering_params_list:
         # 开始执行渲染任务
         rendering_params["Model_Name"]=rendering_params["Model_Name"] if rendering_params["Model_Name"] !="" else param["training_params"]["Model_Name"]
-        ckptname = rendering_params["Model_Name"].split(
-            "/")[-1].rstrip(".ckpt")+".ckpt"
+        ckptname = rendering_params["Model_Name"]+".ckpt"
         sleep_time = 150
 
         with open('/content/api.log', encoding='utf-8') as file:

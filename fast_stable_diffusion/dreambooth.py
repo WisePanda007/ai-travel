@@ -123,7 +123,7 @@ class DreamBooth():
             print(img_path)
             os.system('wget -q -O "{}" "{}"'.format(img_path, url))
             img = Image.open(img_path)
-            img.save(img_path.rstrip(".jpeg") + ".jpg", "JPEG",
+            img.save(img_path[:-5] + ".jpg", "JPEG",
                      quality=100, optimize=True, progressive=True)
             os.system('rm -rf "{}"'.format(img_path))
         print("图片下载完成")

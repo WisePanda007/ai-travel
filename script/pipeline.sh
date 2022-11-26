@@ -1,5 +1,6 @@
 mkdir -p /content/
 cd /content/
+
 mkdir -p /content/Fast-Dreambooth/Regularization_images
 coscmd download -r sd/repository/Regularization_images/ /content/Fast-Dreambooth/Regularization_images/  >/dev/null 2>&1
 mkdir -p /content/diffusers

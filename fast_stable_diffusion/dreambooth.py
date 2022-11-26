@@ -121,11 +121,17 @@ class DreamBooth():
             img_path = IMAGES_FOLDER_OPTIONAL + "/" + \
                 str(name) + "(" + str(count+1) + ")" + ".jpeg"
             print(img_path)
-            os.system('wget -q -O "{}" "{}"'.format(img_path, url))
-            img = Image.open(img_path)
-            img.save(img_path[:-5] + ".jpg", "JPEG",
-                     quality=100, optimize=True, progressive=True)
-            os.system('rm -rf "{}"'.format(img_path))
+            try:
+                os.system('wget -q -O "{}" "{}"'.format(img_path, url))
+                img = Image.open(img_path)
+                img.save(img_path[:-5] + ".jpg", "JPEG",
+                        quality=100, optimize=True, progressive=True)
+                os.system('rm -rf "{}"'.format(img_path))
+            except Exception as e:
+                print(e)
+            finally:
+                pass
+
         print("图片下载完成")
 
         Crop_images = True if str(param["Crop_Images"]).upper(

@@ -44,6 +44,7 @@ def generate_img(rendering_params, task_id):
     image_dir = "/content/stable-diffusion-webui/result_image/"
     count = 0
     for image in result1.images:
+        image = image.convert("RGB")
         image.save(image_dir + str(task_id)+'_'+str(count)+'.jpg')
         count += 1
     print('saved in dir')

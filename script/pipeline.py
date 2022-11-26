@@ -103,5 +103,7 @@ def mian():
 
 if __name__ == "__main__":
     while True:
+        os.chdir("/content/ai-travel/")
+        os.system("""git pull origin tencent""")
         mian()
         time.sleep(60)

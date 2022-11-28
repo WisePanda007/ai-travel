@@ -6,6 +6,12 @@ import time
 import urllib.request
 import demjson
 
+import logging
+logger = logging.getLogger("pipeline") 
+console_handler = logging.StreamHandler()
+logger.addHandler(console_handler)
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+console_handler.setFormatter(formatter)
 
 def run_task(task_id):
     task_time = time.strftime('%Y-%m-%d_%H:%M:%S', time.localtime(time.time()))
@@ -14,9 +20,9 @@ def run_task(task_id):
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0'}
     req = urllib.request.Request(url=param_url, headers=headers)
-    task_type = demjson.decode(urllib.request.urlopen(req).read())[
-        "data"]["task_type"]
-    print("任务类型", task_type)
+    task_type = demjson.decode(urllib.request.urlopen(req).read()).get(
+        "data").get("task_type")
+    logger.info("任务类型: "+ str(task_type))
 
     os.system("""mkdir -p /content/logs/train_log/""")
     os.system("""mkdir -p /content/logs/txt2img_log/""")
@@ -24,15 +30,15 @@ def run_task(task_id):
 
     if "TRAIN" in task_type:
         os.chdir("""/content/""")
-        print("\n启动训练任务\n")
-        print(param_url)
+        logger.info("\n启动训练任务\n")
+        logger.info(param_url)
         os.system("""python ./ai-travel/script/train_model.py  {} 2>&1|tee -a -i /content/logs/train_log/train_{}_task{}.log""".format(
             param_url, task_time, task_id))
-        print("\n模型训练完成\n")
+        logger.info("\n模型训练完成\n")
 
     if "RENDER" in task_type:
-        print("\n启动txt2img任务\n")
-        print(param_url)
+        logger.info("\n启动txt2img任务\n")
+        logger.info(param_url)
         os.chdir("""/content/""")
         os.system("""rm -rf /content/stable-diffusion-webui*""")
         os.system(
@@ -57,8 +63,8 @@ def run_task(task_id):
         os.system("""python running_api.py {} 2>&1|tee -a -i /content/logs/txt2img_log/txt2img_{}_task{}.log""".format(
             param_url, task_time, task_id))
 
-        print("\ntxt2img任务完成\n")
-    print("任务完成,任务id: "+str(task_id))
+        logger.info("\ntxt2img任务完成\n")
+    logger.info("任务完成,任务id: "+str(task_id))
 
 
 def mian():
@@ -67,15 +73,15 @@ def mian():
               'User-agent': 'Chrome/76.0.3809.132'}
     url_get_workid = 'https://www.mafengwo.cn/community/api/ai/listNextWorkIds'
     respon = requests.get(headers=header, url=url_get_workid)
-    print(respon.text)
+    logger.info(respon.text)
     json_respon = json.loads(respon.text)
     queue_id = json_respon.get("data")
 
     if len(queue_id) == 0:
-        print("当前队列无任务,等待下一次查询")
+        logger.info("当前队列无任务,等待下一次查询")
         return 0
     curr_queue_id = queue_id[0]  # 当前id
-    print("当前队列id:"+str(curr_queue_id))
+    logger.info("当前队列id:"+str(curr_queue_id))
     # 根据队列id占有任务id
     time.sleep(1)
     url_use_workid = 'https://www.mafengwo.cn/community/api/ai/occupyWorkById'
@@ -86,7 +92,7 @@ def mian():
         url=url_use_workid, data=json.dumps(body), headers=header)
     json_respon = json.loads(respon.text)
     work_id = json_respon.get("data")
-    print("根据队列id占有任务id,已占用word_id:"+str(work_id))
+    logger.info("根据队列id占有任务id,已占用word_id:"+str(work_id))
 
     # 开始任务
     run_task(work_id)
@@ -97,8 +103,8 @@ def mian():
     url_finish_workid = 'https://www.mafengwo.cn/community/api/ai/finishWorkById'
     respon = requests.post(url=url_finish_workid,
                            data=json.dumps(body), headers=header)
-    print(respon.text)
-    print("已释放队列ID:"+str(curr_queue_id), "等待下一个任务")
+    logger.info(respon.text)
+    logger.info("已释放队列ID:"+str(curr_queue_id)+",等待下一个任务")
 
 
 if __name__ == "__main__":

@@ -44,7 +44,6 @@ def generate_img(rendering_params, task_id):
     image_dir = "/content/stable-diffusion-webui/result_image/"
     count = 0
     for image in result1.images:
-        image = image.convert("RGB")
         image.save(image_dir + str(task_id)+'_'+str(count)+'.jpg')
         count += 1
     print('saved in dir')
@@ -90,6 +89,7 @@ def generate_img(rendering_params, task_id):
         requestData), headers=header1)
     print(respon.text)
     print("渲染图片已上传")
+    os.system("""rm -f /content/stable-diffusion-webui/result_image/*""")
 
 
 def downloadModel(models):
@@ -126,15 +126,17 @@ def main(argv):
     rendering_params_list = (param.get("rendering_params"))
 
     os.system("""echo "准备开始渲染" |tee /content/api.log""")
-    for rendering_params in rendering_params_list:
-        # 开始执行渲染任务
-        rendering_params["Model_Name"]=rendering_params["Model_Name"] if rendering_params["Model_Name"] !="" else param["training_params"]["Model_Name"]
-        ckptname = rendering_params["Model_Name"]+".ckpt"
-        sleep_time = 150
-
-        with open('/content/api.log', encoding='utf-8') as file:
-            content = file.read()
-            if ckptname not in content:
+    flag = True
+    with open('/content/api.log', encoding='utf-8') as file:
+        content = file.read()
+        for rendering_params in rendering_params_list:
+            # 开始执行渲染任务
+            rendering_params["Model_Name"]=rendering_params["Model_Name"] if rendering_params["Model_Name"] !="" else param["training_params"]["Model_Name"]
+            ckptname = rendering_params["Model_Name"].split(
+                "/")[-1].rstrip(".ckpt")+".ckpt"
+            sleep_time = 150
+            if ckptname not in content and flag:
+                flag = False
                 #输入ckpt的情况下，如果该模型没有被加载，加载该模型
                 print("加载模型{}，等待{}s ".format(ckptname, str(sleep_time)))
                 os.system(
@@ -145,13 +147,18 @@ def main(argv):
                 process = multiprocessing.Process(target=fun1, args=())
                 process.start()
                 time.sleep(sleep_time)
-
             else:
                 pass
-        print("开始渲染")
-        generate_img(rendering_params, param["id"])
-        process.terminate() #经常无法关闭进程
-
+            print("开始渲染")
+            process2 = multiprocessing.Process(target=generate_img, args=(rendering_params, param["id"]))
+            process2.start()
+            process2.join()
+            process2.terminate()
+            time.sleep(2)
+            # generate_img(rendering_params, param["id"])
+        
+    process.terminate() #经常无法关闭进程
+    process2.terminate()
     #所有渲染结束后关闭web-api进程
     pids=subprocess.getstatusoutput("""ps -ef | grep "/content/stable-diffusion-webui/webui.py" | grep -v grep | awk '{print $2}'""")[1].split("\n")
     for pid in pids:

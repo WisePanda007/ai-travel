@@ -4,14 +4,15 @@ import requests
 
 
 def get_open_ip():
-    try:
-        ip = requests.get('https://checkip.amazonaws.com').text.strip()
-    except Exception as e:
+    #自动获取本机ip
+    ip=""
+    ip_checkers=['https://checkip.amazonaws.com','http://icanhazip.com']
+    while ip=="" and len(ip_checkers)>0:
+        ip_c=ip_checkers.pop()
         try:
-            ip = requests.get('http://icanhazip.com').text.strip()
+            ip = requests.get(url=ip_c,timeout=2).text.strip()
         except Exception as e:
-            ip = urllib.request.urlopen(
-                'https://ident.me').read().decode('utf8').strip()
+            ip="未查到ip"
     return ip
 
 

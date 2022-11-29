@@ -1,16 +1,22 @@
+import sys
+sys.path.append("/content/ai-travel/")
+import os
+from IPython.utils import capture
+import time
+from face_recognition import recoFace
+from PIL import Image
+from subprocess import getoutput
+from IPython.display import clear_output
+import random
+import transformers
+transformers.logging.set_verbosity_error()
+from script.Logger import get_local_logger
+logger=get_local_logger()
+
 # 更新至11.22
 class DreamBooth():
     def __init__(self, param, original_album_param):
-        import os
-        from IPython.utils import capture
-        import time
-        from face_recognition import recoFace
-        from PIL import Image
-        from subprocess import getoutput
-        from IPython.display import clear_output
-        import random
-        import transformers
-        transformers.logging.set_verbosity_error()
+
 
         Session_Name = param["Model_Name"]  # @param{type: 'string'}
         # @param ["No", "Female", "Male", "Both"]
@@ -60,12 +66,12 @@ class DreamBooth():
             cos_path = cos_path + \
                 ".ckpt" if cos_path.rstrip()[-5] != ".ckpt" else cos_path
 
-            print("下载旧模型: "+cos_path)
+            logger.info("下载旧模型: "+cos_path)
             os.system("""coscmd download {} {}""".format(
                 cos_path, str(SESSION_DIR + "/" + Session_Name + '.ckpt')))
 
         if os.path.exists(str(SESSION_DIR + "/" + Session_Name + '.ckpt')):
-            print('加载旧模型')
+            logger.info('加载旧模型')
             reg(CLASS_DIR)
             os.system("""mkdir -p """ + OUTPUT_DIR)
             os.system(
@@ -74,25 +80,25 @@ class DreamBooth():
             if os.path.exists(OUTPUT_DIR + '/unet/diffusion_pytorch_model.bin'):
                 resume = True
                 os.system("""rm -rf /content/v1-inference.yaml""")
-                print('[1;32mSession loaded.')
+                logger.info('[1;32mSession loaded.')
             else:
                 os.system("""rm -rf /content/v1-inference.yaml""")
                 if not os.path.exists(OUTPUT_DIR + '/unet/diffusion_pytorch_model.bin'):
-                    print(
+                    logger.info(
                         '[1;31mConversion error, if the error persists, remove the CKPT file from the current session folder')
 
         elif not os.path.exists(str(SESSION_DIR)):
             os.system("""mkdir -p """ + INSTANCE_DIR)
-            print('[1;32mCreating session...')
+            logger.info('[1;32mCreating session...')
             reg(CLASS_DIR)
             # if not os.path.exists('/content/stable-diffusion-v1-5/unet/diffusion_pytorch_model.bin'):
             #     if os.path.exists('/content/stable-diffusion-v1-5'):
             #         os.system("""rm -rf '/content/stable-diffusion-v1-5'""")
             #     fdownloadmodel()
             if os.path.exists('/content/stable-diffusion-v1-5/unet/diffusion_pytorch_model.bin'):
-                print('[1;32mSession created, proceed to uploading instance images')
+                logger.info('[1;32mSession created, proceed to uploading instance images')
             else:
-                print(
+                logger.info(
                     '[1;31mError downloading the model, make sure you have accepted the terms at https://huggingface.co/runwayml/stable-diffusion-v1-5')
 
         if Contains_faces == "Female":
@@ -114,36 +120,35 @@ class DreamBooth():
         IMAGES_FOLDER_OPTIONAL = os.path.join(
             "/content/original_album/", param["Model_Name"])
         os.system("mkdir -p " + IMAGES_FOLDER_OPTIONAL)
-        print("开始下载图片")
+        logger.info("开始下载图片")
         for count, i in enumerate(original_album_param):
             url = i["url"]
             name = i["name"]
-            img_path = IMAGES_FOLDER_OPTIONAL + "/" + \
-                str(name) + "(" + str(count+1) + ")" + ".jpeg"
-            print(img_path)
+            img_path = IMAGES_FOLDER_OPTIONAL + "/" + str(name) + "(" + str(count+1) + ")"
+            logger.info(img_path)
             try:
                 os.system('wget -q -O "{}" "{}"'.format(img_path, url))
                 img = Image.open(img_path)
-                img.save(img_path[:-5] + ".jpg", "JPEG",
-                        quality=100, optimize=True, progressive=True)
+                img.convert("RGB")
+                img.save(img_path + ".jpg", "JPEG",quality=100, optimize=True, progressive=True)
                 os.system('rm -rf "{}"'.format(img_path))
             except Exception as e:
-                print(e)
+                logger.info(e)
             finally:
                 pass
 
-        print("图片下载完成")
+        logger.info("图片下载完成")
 
         Crop_images = True if str(param["Crop_Images"]).upper(
         ) == "TRUE" else False  # @param{type: 'boolean'}
 
         if IMAGES_FOLDER_OPTIONAL != "":
             if Crop_images:
-                print("开始人脸裁剪")
+                logger.info("开始人脸裁剪")
                 for filename in os.listdir(IMAGES_FOLDER_OPTIONAL):
                     recoFace.crop_img(os.path.join(
                         IMAGES_FOLDER_OPTIONAL, filename))
-                print("人脸裁剪完成")
+                logger.info("人脸裁剪完成")
                 os.system(
                     'cp -r "{}/." "{}"'.format(IMAGES_FOLDER_OPTIONAL, INSTANCE_DIR))
             else:
@@ -155,7 +160,7 @@ class DreamBooth():
             os.chdir("""/content""")
             if os.path.exists(INSTANCE_DIR + "/.ipynb_checkpoints"):
                 os.system("""rm -r """ + INSTANCE_DIR + "/.ipynb_checkpoints")
-            print('开始训练模型')
+            logger.info('开始训练模型')
 
         os.chdir(SESSION_DIR)
         os.system("""rm -rf instance_images.zip""")
@@ -184,9 +189,9 @@ class DreamBooth():
 
         if Resume_Training == "RESUME_TRAINING" and os.path.exists(OUTPUT_DIR + '/unet/diffusion_pytorch_model.bin'):
             MODELT_NAME = OUTPUT_DIR
-            print('在旧模型的基础上训练新模型')
+            logger.info('在旧模型的基础上训练新模型')
         elif Resume_Training == "RESUME_TRAINING" and not os.path.exists(OUTPUT_DIR + '/unet/diffusion_pytorch_model.bin'):
-            print('旧模型没找到，直接训练新模型')
+            prlogger.infoint('旧模型没找到，直接训练新模型')
             MODELT_NAME = MODEL_NAME
 
         # @markdown ---------------------------
@@ -244,7 +249,7 @@ class DreamBooth():
 
         def txtenc_train(Caption, stpsv, stp, MODELT_NAME, INSTANCE_DIR, CLASS_DIR, OUTPUT_DIR, PT, Seed, precision,
                          Training_Steps):
-            print('[1;33mTraining the text encoder with regularization...[0m')
+            logger.info('[1;33mTraining the text encoder with regularization...[0m')
             os.system("""accelerate launch /content/diffusers/examples/dreambooth/train_dreambooth.py \
             {} \
             --train_text_encoder \
@@ -272,7 +277,7 @@ class DreamBooth():
         def unet_train(Caption, SESSION_DIR, stpsv, stp, MODELT_NAME, INSTANCE_DIR, OUTPUT_DIR, PT, Seed, precision,
                        Training_Steps):
             clear_output()
-            print('[1;33mTraining the unet...[0m')
+            logger.info('[1;33mTraining the unet...[0m')
             os.system("""accelerate launch /content/diffusers/examples/dreambooth/train_dreambooth.py \
             {} \
             --train_only_unet \
@@ -330,7 +335,6 @@ class DreamBooth():
             ))
 
         if os.path.exists('/content/models/' + INSTANCE_NAME + '/unet/diffusion_pytorch_model.bin'):
-            print("Almost done ...")
             os.chdir("""/content""")
             os.system("""python /content/ai-travel/fast_stable_diffusion/convertosd.py {} {} {}""".format(
                 OUTPUT_DIR, SESSION_DIR, Session_Name))
@@ -340,16 +344,16 @@ class DreamBooth():
                 if not os.path.exists(str(SESSION_DIR + '/tokenizer')):
                     os.system(
                         """cp -r '/content/models/{}/tokenizer' {}""".format(INSTANCE_NAME, SESSION_DIR))
-                print("模型训练完成，ckpt模型路径："+ckpt_model_path)
-                print("上传模型到腾讯云cos")
+                logger.info("模型训练完成，ckpt模型路径："+ckpt_model_path)
+                logger.info("上传模型到腾讯云cos")
                 os.system(
                     """coscmd upload {} sd/models/""".format(ckpt_model_path))
 
             else:
-                print("[1;31mSomething went wrong")
+                logger.info("模型训练失败")
 
         else:
-            print("[1;31mSomething went wrong")
+            logger.info("模型训练失败")
 
         def alter(file, old_str, new_str):
             """

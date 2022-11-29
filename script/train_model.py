@@ -6,8 +6,10 @@ from fast_stable_diffusion.dreambooth import DreamBooth
 from utils.download_model import DownloadModel
 from utils.xformers import Xformers
 import demjson
-
 os.environ['MKL_THREADING_LAYER'] = 'GNU'
+
+from script.Logger import get_local_logger
+logger=get_local_logger()
 
 
 def main(argv):
@@ -22,8 +24,8 @@ def main(argv):
 
     training_param = param["data"]["training_params"]
     original_album_param = param["data"]["original_album"]
-    print("任务id: ",param["data"]["id"])
-    print("训练参数: ", training_param)
+    logger.info("任务id: "+param["data"]["id"])
+    logger.info("训练参数: "+ training_param)
 
     # 删除旧模型及数据
     os.system("""sudo chmod -R 777 /content""")
@@ -43,5 +45,5 @@ if __name__ == "__main__":
         main(sys.argv[1:])
         sys.exit(0)
     except Exception as e:
-        print(e)
+        logger.info(e)
         sys.exit(1)

@@ -124,6 +124,8 @@ if __name__ == "__main__":
 
     while True:
         os.chdir("/content/ai-travel/")
+        os.system("""git fetch --all""")
+        os.system("""git reset --hard origin/tencent""") 
         os.system("""git pull origin tencent""")
         os.chdir("/content/")
         mian()

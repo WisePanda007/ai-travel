@@ -156,7 +156,7 @@ class DreamBooth():
                 logger.info("开始图像裁剪")
                 for filename in tqdm(os.listdir(IMAGES_FOLDER_OPTIONAL), bar_format='  |{bar:15}| {n_fmt}/{total_fmt} Uploaded'):
                     try:
-                        extension = filename.split(".")[1]
+                        extension = filename.split(".")[1].rstrip("'")
                         identifier=filename.split(".")[0]
                         new_path_with_file = os.path.join(INSTANCE_DIR, filename)
                         file = Image.open(IMAGES_FOLDER_OPTIONAL+"/"+filename)

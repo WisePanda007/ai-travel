@@ -154,7 +154,7 @@ class DreamBooth():
                 # logger.info("人脸裁剪完成")
                 # os.system(
                 #     'cp -r "{}/." "{}"'.format(IMAGES_FOLDER_OPTIONAL, INSTANCE_DIR))
-
+                logger.info("开始图像裁剪")
                 for filename in tqdm(os.listdir(IMAGES_FOLDER_OPTIONAL), bar_format='  |{bar:15}| {n_fmt}/{total_fmt} Uploaded'):
                     try:
                         extension = filename.split(".")[1]
@@ -176,9 +176,10 @@ class DreamBooth():
                                 image.save(new_path_with_file, format=extension.upper())
                         else:
                             os.system('cp "{}/{}" "{}"'.format(IMAGES_FOLDER_OPTIONAL,filename,INSTANCE_DIR))
+                            logger.info("{}/{} 裁剪".format(IMAGES_FOLDER_OPTIONAL,filename))
                     except Exception as e:
                         logger.error(e)
-
+                logger.info("图像裁剪完成")
             else:
                 os.system(
                     'cp -r "{}/." "{}"'.format(IMAGES_FOLDER_OPTIONAL, INSTANCE_DIR))

@@ -100,7 +100,7 @@ def downloadModel(models):
     for ckpt_path in models:
         os.system("""mkdir -p /content/models/""")
         if ckpt_path in os.listdir("/content/models/"):
-            logger.info(ckpt_path, "已经存在")
+            logger.info(str(ckpt_path)+ "已经存在")
         else:
             cos_path = "sd/models/" + ckpt_path +".ckpt"
             os.system("""coscmd download {} {}""".format(cos_path, "/content/models/"))

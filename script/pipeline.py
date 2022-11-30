@@ -150,4 +150,5 @@ if __name__ == "__main__":
             sendMail([get_eth0_ip(),e])
         time.sleep(60)
 
+        #run_task(6)
 # nohup python -u /content/ai-travel/script/pipeline.py >logs/task.log 2>&1 &

@@ -66,7 +66,7 @@ class DreamBooth():
             cos_path = cos_path + \
                 ".ckpt" if cos_path.rstrip()[-5] != ".ckpt" else cos_path
 
-            logger.info("下载旧模型: "+cos_path)
+            logger.info("下载旧模型: "+str(cos_path))
             os.system("""coscmd download {} {}""".format(
                 cos_path, str(SESSION_DIR + "/" + Session_Name + '.ckpt')))
 
@@ -344,7 +344,7 @@ class DreamBooth():
                 if not os.path.exists(str(SESSION_DIR + '/tokenizer')):
                     os.system(
                         """cp -r '/content/models/{}/tokenizer' {}""".format(INSTANCE_NAME, SESSION_DIR))
-                logger.info("模型训练完成，ckpt模型路径："+ckpt_model_path)
+                logger.info("模型训练完成，ckpt模型路径："+str(ckpt_model_path))
                 logger.info("上传模型到腾讯云cos")
                 os.system(
                     """coscmd upload {} sd/models/""".format(ckpt_model_path))

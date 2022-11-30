@@ -24,8 +24,8 @@ def main(argv):
 
     training_param = param["data"]["training_params"]
     original_album_param = param["data"]["original_album"]
-    logger.info("任务id: "+param["data"]["id"])
-    logger.info("训练参数: "+ training_param)
+    logger.info("任务id: "+str(param["data"]["id"]))
+    logger.info("训练参数: "+ str(training_param))
 
     # 删除旧模型及数据
     os.system("""sudo chmod -R 777 /content""")

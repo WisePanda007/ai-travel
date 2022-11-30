@@ -132,7 +132,7 @@ class DreamBooth():
                 os.system('wget -q -O "{}" "{}"'.format(img_path, url))
                 img = Image.open(img_path)
                 img.convert("RGB")
-                img.save(img_path + ".jpg", "JPEG",quality=100, optimize=True, progressive=True)
+                img.save((img_path + ".jpg").strip("'"), "JPEG",quality=100, optimize=True, progressive=True)
                 os.system('rm -rf "{}"'.format(img_path))
             except Exception as e:
                 logger.info(e)
@@ -156,25 +156,29 @@ class DreamBooth():
                 #     'cp -r "{}/." "{}"'.format(IMAGES_FOLDER_OPTIONAL, INSTANCE_DIR))
 
                 for filename in tqdm(os.listdir(IMAGES_FOLDER_OPTIONAL), bar_format='  |{bar:15}| {n_fmt}/{total_fmt} Uploaded'):
-                    extension = filename.split(".")[1]
-                    identifier=filename.split(".")[0]
-                    new_path_with_file = os.path.join(INSTANCE_DIR, filename)
-                    file = Image.open(IMAGES_FOLDER_OPTIONAL+"/"+filename)
-                    width, height = file.size
-                    if file.size !=(Crop_size, Crop_size):      
-                        side_length = min(width, height)
-                        left = (width - side_length)/2
-                        top = (height - side_length)/2
-                        right = (width + side_length)/2
-                        bottom = (height + side_length)/2
-                        image = file.crop((left, top, right, bottom))
-                        image = image.resize((Crop_size, Crop_size))
-                        if (extension.upper() == "JPG"):
-                            image.save(new_path_with_file, format="JPEG", quality = 100)
+                    try:
+                        extension = filename.split(".")[1]
+                        identifier=filename.split(".")[0]
+                        new_path_with_file = os.path.join(INSTANCE_DIR, filename)
+                        file = Image.open(IMAGES_FOLDER_OPTIONAL+"/"+filename)
+                        width, height = file.size
+                        if file.size !=(Crop_size, Crop_size):      
+                            side_length = min(width, height)
+                            left = (width - side_length)/2
+                            top = (height - side_length)/2
+                            right = (width + side_length)/2
+                            bottom = (height + side_length)/2
+                            image = file.crop((left, top, right, bottom))
+                            image = image.resize((Crop_size, Crop_size))
+                            if (extension.upper() == "JPG"):
+                                image.save(new_path_with_file, format="JPEG", quality = 100)
+                            else:
+                                image.save(new_path_with_file, format=extension.upper())
                         else:
-                            image.save(new_path_with_file, format=extension.upper())
-                    else:
-                        os.system('cp "{}/{}" "{}"'.format(IMAGES_FOLDER_OPTIONAL,filename,INSTANCE_DIR))
+                            os.system('cp "{}/{}" "{}"'.format(IMAGES_FOLDER_OPTIONAL,filename,INSTANCE_DIR))
+                    except Exception as e:
+                        logger.error(e)
+
             else:
                 os.system(
                     'cp -r "{}/." "{}"'.format(IMAGES_FOLDER_OPTIONAL, INSTANCE_DIR))

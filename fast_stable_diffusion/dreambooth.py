@@ -119,8 +119,7 @@ class DreamBooth():
         if not os.path.exists(str(INSTANCE_DIR)):
             os.system("""mkdir -p """ + INSTANCE_DIR)
 
-        IMAGES_FOLDER_OPTIONAL = os.path.join(
-            "/content/original_album/", param["Model_Name"])
+        IMAGES_FOLDER_OPTIONAL = os.path.join("/content/original_album/", param["Model_Name"])
         os.system("mkdir -p " + IMAGES_FOLDER_OPTIONAL)
         logger.info("开始下载图片")
         for count, i in enumerate(original_album_param):

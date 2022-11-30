@@ -9,6 +9,8 @@ from subprocess import getoutput
 from IPython.display import clear_output
 import random
 import transformers
+from tqdm import tqdm
+
 transformers.logging.set_verbosity_error()
 from utils.Logger import get_local_logger
 logger=get_local_logger()
@@ -141,16 +143,38 @@ class DreamBooth():
 
         Crop_images = True if str(param["Crop_Images"]).upper(
         ) == "TRUE" else False  # @param{type: 'boolean'}
+        Crop_size=512
 
         if IMAGES_FOLDER_OPTIONAL != "":
             if Crop_images:
-                logger.info("开始人脸裁剪")
-                for filename in os.listdir(IMAGES_FOLDER_OPTIONAL):
-                    recoFace.crop_img(os.path.join(
-                        IMAGES_FOLDER_OPTIONAL, filename))
-                logger.info("人脸裁剪完成")
-                os.system(
-                    'cp -r "{}/." "{}"'.format(IMAGES_FOLDER_OPTIONAL, INSTANCE_DIR))
+                # logger.info("开始人脸裁剪")
+                # for filename in os.listdir(IMAGES_FOLDER_OPTIONAL):
+                #     recoFace.crop_img(os.path.join(
+                #         IMAGES_FOLDER_OPTIONAL, filename))
+                # logger.info("人脸裁剪完成")
+                # os.system(
+                #     'cp -r "{}/." "{}"'.format(IMAGES_FOLDER_OPTIONAL, INSTANCE_DIR))
+
+                for filename in tqdm(os.listdir(IMAGES_FOLDER_OPTIONAL), bar_format='  |{bar:15}| {n_fmt}/{total_fmt} Uploaded'):
+                    extension = filename.split(".")[1]
+                    identifier=filename.split(".")[0]
+                    new_path_with_file = os.path.join(INSTANCE_DIR, filename)
+                    file = Image.open(IMAGES_FOLDER_OPTIONAL+"/"+filename)
+                    width, height = file.size
+                    if file.size !=(Crop_size, Crop_size):      
+                        side_length = min(width, height)
+                        left = (width - side_length)/2
+                        top = (height - side_length)/2
+                        right = (width + side_length)/2
+                        bottom = (height + side_length)/2
+                        image = file.crop((left, top, right, bottom))
+                        image = image.resize((Crop_size, Crop_size))
+                        if (extension.upper() == "JPG"):
+                            image.save(new_path_with_file, format="JPEG", quality = 100)
+                        else:
+                            image.save(new_path_with_file, format=extension.upper())
+                    else:
+                        os.system('cp "{}/{}" "{}"'.format(IMAGES_FOLDER_OPTIONAL,filename,INSTANCE_DIR))
             else:
                 os.system(
                     'cp -r "{}/." "{}"'.format(IMAGES_FOLDER_OPTIONAL, INSTANCE_DIR))

@@ -6,10 +6,14 @@ import time
 import urllib.request
 import demjson
 sys.path.append("/content/ai-travel/")
-from script.Logger import get_local_logger
+from utils.Logger import get_local_logger,get_eth0_ip
+from utils.alarm import sendMail
 logger=get_local_logger()
 
 def run_task(task_id):
+
+    flag=0 #标记任务成功/失败,flag=0成功
+
     task_time = time.strftime('%Y-%m-%d_%H:%M:%S', time.localtime(time.time()))
     param_url = "https://www.mafengwo.cn/community/api/ai/painting?id={}".format(
         task_id)
@@ -28,9 +32,13 @@ def run_task(task_id):
         os.chdir("""/content/""")
         logger.info("启动训练任务")
         logger.info(param_url)
-        os.system("""python ./ai-travel/script/train_model.py  {} 2>&1|tee -a -i /content/logs/train_log/train_{}_task{}.log""".format(
+        flag=os.system("""python ./ai-travel/script/train_model.py  {} 2>&1|tee -a -i /content/logs/train_log/train_{}_task{}.log""".format(
             param_url, task_time, task_id))
-        logger.info("模型训练完成")
+        if flag==0:
+            logger.info("模型训练完成")
+        else:
+            logger.error("模型训练失败")
+            return flag
 
     if "RENDER" in task_type:
         logger.info("启动txt2img任务")
@@ -50,11 +58,15 @@ def run_task(task_id):
             """cp -rf /content/ai-travel/web-ui/webui.py /content/stable-diffusion-webui/webui.py""")
         os.system("""chmod 777 -R /content/stable-diffusion-webui""")
         os.chdir("""/content/stable-diffusion-webui/""")
-        os.system("""python running_api.py {} 2>&1|tee -a -i /content/logs/txt2img_log/txt2img_{}_task{}.log""".format(
+        flag=os.system("""python running_api.py {} 2>&1|tee -a -i /content/logs/txt2img_log/txt2img_{}_task{}.log""".format(
             param_url, task_time, task_id))
-
-        logger.info("txt2img任务完成")
+        if flag==0:
+            logger.info("txt2img任务完成")
+        else:
+            logger.error("txt2img任务失败")
+            return flag
     logger.info("任务完成,任务id: "+str(task_id))
+    return flag
 
 
 def mian():
@@ -85,7 +97,7 @@ def mian():
     logger.info("根据队列id占有任务id,已占用word_id:"+str(work_id))
 
     # 开始任务
-    run_task(work_id)
+    flag=run_task(work_id)
     # run_task(6)
 
     # 释放一个工作ID
@@ -95,6 +107,7 @@ def mian():
                            data=json.dumps(body), headers=header)
     logger.info(respon.text)
     logger.info("已释放队列ID:"+str(curr_queue_id)+",等待下一个任务")
+    return flag
 
 
 if __name__ == "__main__":
@@ -128,7 +141,13 @@ if __name__ == "__main__":
         os.system("""git reset --hard origin/tencent""") 
         os.system("""git pull origin tencent""")
         os.chdir("/content/")
-        mian()
+        try:
+            flag=mian()
+            if flag!=0:
+                sendMail([get_eth0_ip(),"check task"])
+        except Exception as e:
+            logger.error(e)
+            sendMail([get_eth0_ip(),e])
         time.sleep(60)
 
 # nohup python -u /content/ai-travel/script/pipeline.py >logs/task.log 2>&1 &

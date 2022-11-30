@@ -10,7 +10,7 @@ from IPython.display import clear_output
 import random
 import transformers
 transformers.logging.set_verbosity_error()
-from script.Logger import get_local_logger
+from utils.Logger import get_local_logger
 logger=get_local_logger()
 
 # 更新至11.22

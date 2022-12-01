@@ -8,6 +8,7 @@ import demjson
 sys.path.append("/content/ai-travel/")
 from utils.Logger import get_local_logger,get_eth0_ip
 from utils.alarm import sendMail
+from utils.git_timeout import update_git_ai_travel
 logger=get_local_logger()
 
 def run_task(task_id):
@@ -140,13 +141,10 @@ if __name__ == "__main__":
     os.system("""rm -rf /content/content""")
 
     while True: 
-        #更新代码
+        #更新git代码
         try:
-            os.chdir("/content/ai-travel/")
-            os.system("""git fetch --all""")
-            os.system("""git reset --hard origin/tencent""") 
-            os.system("""git pull origin tencent""")
-        except Exception as e:
+            update_git_ai_travel()
+        except TimeoutError as e:
             logger.warning(str(get_eth0_ip())+"无法连接git")
         os.chdir("/content/")
         try:

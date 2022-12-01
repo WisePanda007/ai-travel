@@ -139,11 +139,15 @@ if __name__ == "__main__":
         """mv /content/content/stable-diffusion-webui /content/stable-diffusion-webui""")
     os.system("""rm -rf /content/content""")
 
-    while True:
-        os.chdir("/content/ai-travel/")
-        os.system("""git fetch --all""")
-        os.system("""git reset --hard origin/tencent""") 
-        os.system("""git pull origin tencent""")
+    while True: 
+        #更新代码
+        try:
+            os.chdir("/content/ai-travel/")
+            os.system("""git fetch --all""")
+            os.system("""git reset --hard origin/tencent""") 
+            os.system("""git pull origin tencent""")
+        except Exception as e:
+            logger.warning(str(get_eth0_ip())+"无法连接git")
         os.chdir("/content/")
         try:
             flag=mian()

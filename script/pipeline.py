@@ -119,6 +119,7 @@ if __name__ == "__main__":
     logger.info("启动pipeline")
     os.chdir("/content/")
     #下载依赖
+    os.system("""pip install func_timeout""")
     os.system("""mkdir -p /content/Fast-Dreambooth/Regularization_images""")
     os.system("""coscmd download -r sd/repository/Regularization_images/ /content/Fast-Dreambooth/Regularization_images/  >/dev/null 2>&1""")
     os.system("""mkdir -p /content/diffusers""")

@@ -146,8 +146,9 @@ if __name__ == "__main__":
             update_git_ai_travel()
         except TimeoutError as e:
             logger.warning(str(get_eth0_ip())+"无法连接git")
-        os.chdir("/content/")
+             
         try:
+            os.chdir("/content/")
             flag=mian()
             if flag!=0:
                 sendMail([get_eth0_ip(),"check task"])

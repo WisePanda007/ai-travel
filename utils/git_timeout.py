@@ -28,7 +28,7 @@ def timeout(sec):
     return decorator
 
 
-@timeout(10)
+@func_set_timeout(10)
 def update_git_ai_travel():
     os.chdir("/content/ai-travel/")
     os.system("""git fetch --all""")

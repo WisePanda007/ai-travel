@@ -144,9 +144,9 @@ if __name__ == "__main__":
         #更新git代码
         try:
             update_git_ai_travel()
-        except TimeoutError as e:
+        except Exception as e:
             logger.warning(str(get_eth0_ip())+"无法连接git")
-             
+
         try:
             os.chdir("/content/")
             flag=mian()

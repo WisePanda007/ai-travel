@@ -2,6 +2,7 @@ import json
 import multiprocessing
 import subprocess
 import requests
+import socket
 from PIL import Image
 import webuiapi
 import urllib.request
@@ -18,15 +19,14 @@ logger=get_local_logger()
 
 
 def fun1():
-    os.system("python /content/stable-diffusion-webui/webui.py 2>&1|tee -a -i /content/api.log")
-
-
+    os.system("python /content/stable-diffusion-webui/webui.py")
 
 def generate_img(rendering_params, task_id):
     api = webuiapi.WebUIApi(host='127.0.0.1', port=7861)
     result1 = ()
     if rendering_params["Prompts"] != "":
         result1 = api.txt2img(
+            # sd_model=rendering_params["Model_Name"],
             steps=int(rendering_params["Sampling_Steps"]),
             prompt=rendering_params["Prompts"],
             negative_prompt=rendering_params["NegativePrompts"],
@@ -105,7 +105,6 @@ def downloadModel(models):
             cos_path = "sd/models/" + ckpt_path +".ckpt"
             os.system("""coscmd download {} {}""".format(cos_path, "/content/models/"))
 
-
 def main(argv):
     param = demjson.decode_file(
         "/content/ai-travel/config/config_demo.json")["data"]
@@ -124,39 +123,37 @@ def main(argv):
 
     rendering_params_list = (param.get("rendering_params"))
 
-    os.system("""echo "准备开始渲染" |tee /content/api.log""")
-    flag = True
-    with open('/content/api.log', encoding='utf-8') as file:
-        content = file.read()
-        for rendering_params in rendering_params_list:
-            # 开始执行渲染任务
-            # rendering_params["Model_Name"]=rendering_params["Model_Name"] if rendering_params["Model_Name"] !="" else param["training_params"]["Model_Name"]
-            ckptname = rendering_params["Model_Name"]+".ckpt"
-            sleep_time = 150
-            if ckptname not in content and flag:
-                flag = False
-                #输入ckpt的情况下，如果该模型没有被加载，加载该模型
-                logger.info("加载模型{}，预计{}s ".format(ckptname, str(sleep_time)))
-                os.system(
-                    "rm -rf /content/stable-diffusion-webui/models/Stable-diffusion/*")
-                os.system("""sudo chmod -R 777 /content""")
-                os.system(
-                    "cp /content/models/{} /content/stable-diffusion-webui/models/Stable-diffusion/".format(ckptname))
-                process = multiprocessing.Process(target=fun1, args=())
-                process.start()
-                time.sleep(sleep_time)
-            else:
-                pass
-            logger.info("渲染参数: "+str(rendering_params))
-            time1=2*int(rendering_param.get("Sampling_Steps"))*int(rendering_param.get("Batch_Count"))*int(rendering_param.get("Width"))*int(rendering_param.get("Height"))/(512*512)
-            logger.info("相册id {} 开始渲染，预计{}s".format(rendering_params.get("id"),time1))
-            process2 = multiprocessing.Process(target=generate_img, args=(rendering_params, param["id"]))
-            process2.start()
-            process2.join()
-            process2.terminate()
-            time.sleep(2)
-            # generate_img(rendering_params, param["id"])
-        
+    for rendering_params in rendering_params_list:
+        # 开始执行渲染任务
+        # rendering_params["Model_Name"]=rendering_params["Model_Name"] if rendering_params["Model_Name"] !="" else param["training_params"]["Model_Name"]
+        ckptname = rendering_params["Model_Name"]+".ckpt"
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        result = sock.connect_ex(('127.0.0.1',7861))
+        if ckptname not in os.listdir("/content/stable-diffusion-webui/models/Stable-diffusion/") or result!=0:
+            pids=subprocess.getstatusoutput("""ps -ef | grep "/content/stable-diffusion-webui/webui.py" | grep -v grep | awk '{print $2}'""")[1].split("\n")
+            for pid in pids:
+                os.system("kill {}".format(pid))
+            os.system("rm -rf /content/stable-diffusion-webui/models/Stable-diffusion/*")
+            os.system("""sudo chmod -R 777 /content""")
+            os.system("cp /content/models/{} /content/stable-diffusion-webui/models/Stable-diffusion/".format(ckptname))
+
+            sleep_time = 40
+            logger.info("启动渲染服务，预计{}s ".format( str(sleep_time)))
+            process = multiprocessing.Process(target=fun1, args=())
+            process.start()
+            time.sleep(sleep_time)
+        else:
+            pass
+        logger.info("渲染参数: "+str(rendering_params))
+        times=2*int(rendering_params.get("Sampling_Steps"))*int(rendering_params.get("Batch_Count"))*int(rendering_params.get("Width"))*int(rendering_params.get("Height"))/(512*512)
+        logger.info("相册id {} 开始渲染，预计{}s".format(rendering_params.get("id"),times))
+        process2 = multiprocessing.Process(target=generate_img, args=(rendering_params, param["id"]))
+        process2.start()
+        process2.join()
+        process2.terminate()
+        time.sleep(2)
+        # generate_img(rendering_params, param["id"])
+
     process.terminate() #经常无法关闭进程
     process2.terminate()
     #所有渲染结束后关闭web-api进程

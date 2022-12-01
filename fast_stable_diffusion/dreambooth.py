@@ -219,7 +219,7 @@ class DreamBooth():
             MODELT_NAME = OUTPUT_DIR
             logger.info('在旧模型的基础上训练新模型')
         elif Resume_Training == "RESUME_TRAINING" and not os.path.exists(OUTPUT_DIR + '/unet/diffusion_pytorch_model.bin'):
-            prlogger.infoint('旧模型没找到，直接训练新模型')
+            logger.info('旧模型没找到，直接训练新模型')
             MODELT_NAME = MODEL_NAME
 
         # @markdown ---------------------------

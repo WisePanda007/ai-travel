@@ -70,6 +70,7 @@ def run_task(task_id):
 
 
 def mian():
+    flag=0 #标记任务成功/失败,flag=0成功
     # 获取队列id
     header = {'content-type': 'application/json',
               'User-agent': 'Chrome/76.0.3809.132'}
@@ -81,11 +82,11 @@ def mian():
 
     if len(queue_id) == 0:
         logger.info("当前队列无任务,等待下一次查询")
-        return 0
+        return flag
     curr_queue_id = queue_id[0]  # 当前id
     logger.info("当前队列id:"+str(curr_queue_id))
     # 根据队列id占有任务id
-    time.sleep(1)
+    # time.sleep(1)
     url_use_workid = 'https://www.mafengwo.cn/community/api/ai/occupyWorkById'
     body = {
         "work_id": curr_queue_id
@@ -97,8 +98,11 @@ def mian():
     logger.info("根据队列id占有任务id,已占用word_id:"+str(work_id))
 
     # 开始任务
-    flag=run_task(work_id)
-    # run_task(6)
+    try:
+        flag=run_task(work_id)
+    except Exception as e:
+        logger.error(e)
+        flag=-1
 
     # 释放一个工作ID
     time.sleep(1)
@@ -119,14 +123,14 @@ if __name__ == "__main__":
     os.system("""mkdir -p /content/diffusers""")
     os.system("""coscmd download -r sd/repository/diffusers/ /content/diffusers/ >/dev/null 2>&1""")
 
-    #下载基础模型
+    #下载基础模型v1.5
     os.system("""rm -rf /content/stable-diffusion-v1-5*""")
     os.system("""coscmd download -f sd/models/stable-diffusion-v1-5.zip /content/stable-diffusion-v1-5.zip""")
     os.system("""unzip /content/stable-diffusion-v1-5.zip > /dev/null 2>&1""")
     os.system("""mv -f /content/content/stable-diffusion-v1-5 /content/stable-diffusion-v1-5""")
     os.system("""rm -rf /content/content""")
 
-    #下载webui服务
+    #下载webui代码
     os.system("""rm -rf /content/stable-diffusion-webui*""")
     os.system(
         """coscmd download -f sd/repository/stable-diffusion-webui.zip /content/stable-diffusion-webui.zip""")

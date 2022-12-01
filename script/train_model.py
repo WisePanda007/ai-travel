@@ -41,9 +41,4 @@ def main(argv):
 
 
 if __name__ == "__main__":
-    try:
-        main(sys.argv[1:])
-        sys.exit(0)
-    except Exception as e:
-        logger.info(e)
-        sys.exit(1)
+    main(sys.argv[1:])

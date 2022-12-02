@@ -16,7 +16,7 @@ def run_task(task_id):
     flag=0 #标记任务成功/失败,flag=0成功
 
     task_time = time.strftime('%Y-%m-%d_%H:%M:%S', time.localtime(time.time()))
-    param_url = "https://www.mafengwo.cn/community/api/ai/painting?id={}".format(
+    param_url = "https://www.mafengwo.cn/community/api/ai/painting?work_id={}".format(
         task_id)
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0'}

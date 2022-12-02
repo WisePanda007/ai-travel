@@ -8,7 +8,7 @@ import demjson
 sys.path.append("/content/ai-travel/")
 from utils.Logger import logger,get_eth0_ip
 from utils.alarm import sendMail
-from utils.git_timeout import update_git_ai_travel
+# from utils.git_timeout import update_git_ai_travel
 
 def run_task(task_id):
 

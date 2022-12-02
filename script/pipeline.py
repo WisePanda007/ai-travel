@@ -100,7 +100,7 @@ def mian():
 
     # 开始任务
     try:
-        flag=run_task(work_id)
+        flag=run_task(curr_queue_id)
     except Exception as e:
         logger.error(e)
         flag=-1

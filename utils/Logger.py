@@ -19,3 +19,5 @@ def get_local_logger():
     console_handler.setFormatter(formatter)
     logger.setLevel(logging.INFO)
     return logger
+    
+logger=get_local_logger()

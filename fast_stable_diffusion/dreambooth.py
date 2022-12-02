@@ -12,8 +12,7 @@ import transformers
 from tqdm import tqdm
 
 transformers.logging.set_verbosity_error()
-from utils.Logger import get_local_logger
-logger=get_local_logger()
+from utils.Logger import logger
 
 # 更新至11.22
 class DreamBooth():

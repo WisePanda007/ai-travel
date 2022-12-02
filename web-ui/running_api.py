@@ -14,8 +14,8 @@ import sys
 sys.path.append("/content/stable-diffusion-webui/")
 
 sys.path.append("/content/ai-travel/")
-from utils.Logger import get_local_logger
-logger=get_local_logger()
+from utils.Logger import logger
+
 
 
 def fun1():

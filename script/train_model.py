@@ -8,9 +8,7 @@ from utils.xformers import Xformers
 import demjson
 os.environ['MKL_THREADING_LAYER'] = 'GNU'
 
-from utils.Logger import get_local_logger
-logger=get_local_logger()
-
+from utils.Logger import logger
 
 def main(argv):
     # 加载参数

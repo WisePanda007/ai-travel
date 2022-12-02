@@ -6,10 +6,9 @@ import time
 import urllib.request
 import demjson
 sys.path.append("/content/ai-travel/")
-from utils.Logger import get_local_logger,get_eth0_ip
+from utils.Logger import logger,get_eth0_ip
 from utils.alarm import sendMail
 from utils.git_timeout import update_git_ai_travel
-logger=get_local_logger()
 
 def run_task(task_id):
 
@@ -105,13 +104,19 @@ def mian():
         logger.error(e)
         flag=-1
 
+    if flag==0:
     # 释放一个工作ID
-    time.sleep(1)
-    url_finish_workid = 'https://www.mafengwo.cn/community/api/ai/finishWorkById'
-    respon = requests.post(url=url_finish_workid,
-                           data=json.dumps(body), headers=header)
-    logger.info(respon.text)
-    logger.info("已释放队列ID:"+str(curr_queue_id)+",等待下一个任务")
+        url_finish_workid = 'https://www.mafengwo.cn/community/api/ai/finishWorkById'
+        respon = requests.post(url=url_finish_workid,
+                            data=json.dumps(body), headers=header)
+        logger.info(respon.text)
+        logger.info("任务成功，已释放队列ID:"+str(curr_queue_id)+",等待下一个任务")
+    else:
+        url_finish_workid = 'https://www.mafengwo.cn/community/api/ai/failWorkById'
+        respon = requests.post(url=url_finish_workid,
+                            data=json.dumps(body), headers=header)
+        logger.info(respon.text)
+        logger.info("任务失败，已释放队列ID:"+str(curr_queue_id)+",等待下一个任务")
     return flag
 
 

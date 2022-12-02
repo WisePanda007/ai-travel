@@ -137,11 +137,17 @@ def main(argv):
             os.system("""sudo chmod -R 777 /content""")
             os.system("cp /content/models/{} /content/stable-diffusion-webui/models/Stable-diffusion/".format(ckptname))
 
-            sleep_time = 40
-            logger.info("启动渲染服务，预计{}s ".format( str(sleep_time)))
+            logger.info("启动渲染服务，预计{}s ".format(str(30)))
             process = multiprocessing.Process(target=fun1, args=())
             process.start()
-            time.sleep(sleep_time)
+            # time.sleep(sleep_time)
+            result,count=1,1
+            while result!=0 and count<=60:
+                sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                result = sock.connect_ex(('127.0.0.1',7861))
+                time.sleep(1)
+                count+=1
+                logger.info(str(count))
         else:
             pass
         logger.info("渲染参数: "+str(rendering_params))

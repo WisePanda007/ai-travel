@@ -37,7 +37,7 @@ def post_log(curr_queue_id, message):
     log_url = 'https://www.mafengwo.cn/community/api/ai/addWorkLog'
     body = {
         "work_id": str(curr_queue_id),
-        "content": {"logs": message}
+        "content": {str(get_eth0_ip()): str(message)}
     }
     # print(json.dumps(body))
     respon = requests.post(url=log_url, data=json.dumps(body), headers=header)

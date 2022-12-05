@@ -35,8 +35,8 @@ def run_task(task_id):
         post_log(task_id,"启动训练任务")
         logger.info(param_url)
         post_log(task_id,param_url)
-        flag=os.system("""python ./ai-travel/script/train_model.py  {} 2>&1|tee -a -i /content/logs/train_log/train_{}_task{}.log""".format(
-            param_url, task_time, task_id))
+        flag=os.system("""python -u ./ai-travel/script/train_model.py {} {} 2>&1|tee -a -i /content/logs/train_log/train_{}_task{}.log""".format(
+            param_url, task_id, task_time, task_id))
         if flag==0:
             logger.info("模型训练成功")
             post_log(task_id,"模型训练成功")
@@ -65,8 +65,8 @@ def run_task(task_id):
             """cp -rf /content/ai-travel/web-ui/webui.py /content/stable-diffusion-webui/webui.py""")
         os.system("""chmod 777 -R /content/stable-diffusion-webui""")
         os.chdir("""/content/stable-diffusion-webui/""")
-        flag=os.system("""python running_api.py {} 2>&1|tee -a -i /content/logs/txt2img_log/txt2img_{}_task{}.log""".format(
-            param_url, task_time, task_id))
+        flag=os.system("""python -u running_api.py {} {} 2>&1|tee -a -i /content/logs/txt2img_log/txt2img_{}_task{}.log""".format(
+            param_url, task_id, task_time, task_id))
         if flag==0:
             logger.info("txt2img任务成功")
             post_log(task_id,"txt2img任务成功")

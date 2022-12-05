@@ -99,11 +99,9 @@ def downloadModel(models):
     #下载所有需要的模型
     for ckpt_path in models:
         os.system("""mkdir -p /content/models/""")
-        if ckpt_path in os.listdir("/content/models/"):
-            logger.info(str(ckpt_path)+ "已经存在")
-        else:
-            cos_path = "sd/models/" + ckpt_path +".ckpt"
-            os.system("""coscmd download {} {}""".format(cos_path, "/content/models/"))
+
+        cos_path = "sd/models/" + ckpt_path +".ckpt"
+        os.system("""coscmd download {} {}""".format(cos_path, "/content/models/"))
 
 def main(argv):
     param = demjson.decode_file(

@@ -6,7 +6,7 @@ import time
 import urllib.request
 import demjson
 sys.path.append("/content/ai-travel/")
-from utils.Logger import logger,get_eth0_ip
+from utils.Logger import logger,get_eth0_ip,post_log
 from utils.alarm import sendMail
 # from utils.git_timeout import update_git_ai_travel
 
@@ -23,6 +23,7 @@ def run_task(task_id):
     task_type = demjson.decode(urllib.request.urlopen(req).read()).get(
         "data").get("task_type")
     logger.info("任务类型: "+ str(task_type))
+    post_log(task_id,"任务类型: "+ str(task_type))
 
     os.system("""mkdir -p /content/logs/train_log/""")
     os.system("""mkdir -p /content/logs/txt2img_log/""")
@@ -31,18 +32,24 @@ def run_task(task_id):
     if "TRAIN" in task_type:
         os.chdir("""/content/""")
         logger.info("启动训练任务")
+        post_log(task_id,"启动训练任务")
         logger.info(param_url)
+        post_log(task_id,param_url)
         flag=os.system("""python ./ai-travel/script/train_model.py  {} 2>&1|tee -a -i /content/logs/train_log/train_{}_task{}.log""".format(
             param_url, task_time, task_id))
         if flag==0:
-            logger.info("模型训练完成")
+            logger.info("模型训练成功")
+            post_log(task_id,"模型训练成功")
         else:
             logger.error("模型训练失败")
+            post_log(task_id,"模型训练失败")
             return flag
 
     if "RENDER" in task_type:
         logger.info("启动txt2img任务")
+        post_log(task_id,"启动txt2img任务")
         logger.info(param_url)
+        post_log(task_id,param_url)
         os.chdir("""/content/""")
 
         os.system("""mkdir -p /content/stable-diffusion-webui/result_image/""")
@@ -61,11 +68,14 @@ def run_task(task_id):
         flag=os.system("""python running_api.py {} 2>&1|tee -a -i /content/logs/txt2img_log/txt2img_{}_task{}.log""".format(
             param_url, task_time, task_id))
         if flag==0:
-            logger.info("txt2img任务完成")
+            logger.info("txt2img任务成功")
+            post_log(task_id,"txt2img任务成功")
         else:
             logger.error("txt2img任务失败")
+            post_log(task_id,"txt2img任务失败")
             return flag
     logger.info("任务完成,任务id: "+str(task_id))
+    post_log(task_id,"任务完成,任务id: "+str(task_id))
     return flag
 
 

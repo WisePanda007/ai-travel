@@ -21,7 +21,7 @@ from utils.Logger import logger,post_log
 def fun1():
     os.system("python /content/stable-diffusion-webui/webui.py")
 
-def generate_img(rendering_params, task_id):
+def generate_img(rendering_params, painting_id,task_id):
     api = webuiapi.WebUIApi(host='127.0.0.1', port=7861)
     result1 = ()
     if rendering_params["Prompts"] != "":
@@ -47,7 +47,7 @@ def generate_img(rendering_params, task_id):
     image_dir = "/content/stable-diffusion-webui/result_image/"
     count = 0
     for image in result1.images:
-        image.save(image_dir + str(task_id)+'_'+str(count)+'.jpg')
+        image.save(image_dir + str(painting_id)+'_'+str(count)+'.jpg')
         count += 1
     logger.info('saved in dir')
     post_log(task_id,"准备上传图片")
@@ -85,7 +85,7 @@ def generate_img(rendering_params, task_id):
     logger.info('已获取图片id与url')
     requestData = {
         "render_id":rendering_params["id"],
-        "painting_id": task_id,
+        "painting_id": painting_id,
         "images": saveOutputAlbum
     }
     # logger.info(requestData)
@@ -159,7 +159,7 @@ def main(argv):
         times=2*int(rendering_params.get("Sampling_Steps"))*int(rendering_params.get("Batch_Count"))*int(rendering_params.get("Width"))*int(rendering_params.get("Height"))/(512*512)
         logger.info("相册id {} 开始渲染，预计{}s".format(rendering_params.get("id"),times))
         post_log(task_id,"相册id {} 开始渲染".format(rendering_params.get("id")))
-        process2 = multiprocessing.Process(target=generate_img, args=(rendering_params, param["id"]))
+        process2 = multiprocessing.Process(target=generate_img, args=(rendering_params, param["id"],task_id))
         process2.start()
         process2.join()
         process2.terminate()

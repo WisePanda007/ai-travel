@@ -91,7 +91,7 @@ class DreamBooth():
                     logger.info(
                         '[1;31mConversion error, if the error persists, remove the CKPT file from the current session folder')
                     post_log(task_id,"训练会话启动失败")
-                    return -1
+                    sys.exit(-1)
 
         elif not os.path.exists(str(SESSION_DIR)):
             os.system("""mkdir -p """ + INSTANCE_DIR)
@@ -108,7 +108,7 @@ class DreamBooth():
                 logger.info(
                     '[1;31mError downloading the model, make sure you have accepted the terms at https://huggingface.co/runwayml/stable-diffusion-v1-5')
                 post_log(task_id,"训练会话启动失败")
-                return -1
+                sys.exit(-1)
 
         if Contains_faces == "Female":
             CLASS_DIR = CLASS_DIR + '/Women'
@@ -393,15 +393,15 @@ class DreamBooth():
                 post_log(task_id,"模型训练完成，上传模型到腾讯云cos")
                 os.system(
                     """coscmd upload {} sd/models/""".format(ckpt_model_path))
-                return 0
+                sys.exit(0)
             else:
-                logger.info("模型训练失败")
-                return -1
+                logger.error("模型训练失败")
+                sys.exit(-1)
 
         else:
-            logger.info("模型训练失败")
+            logger.error("模型训练失败")
             post_log(task_id,"模型训练完成，上传模型到腾讯云cos")
-            return -1
+            sys.exit(-1)
 
 
         def alter(file, old_str, new_str):

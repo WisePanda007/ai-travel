@@ -14,7 +14,7 @@ import sys
 sys.path.append("/content/stable-diffusion-webui/")
 
 sys.path.append("/content/ai-travel/")
-from utils.Logger import logger
+from utils.Logger import logger,post_log
 
 
 
@@ -50,6 +50,7 @@ def generate_img(rendering_params, task_id):
         image.save(image_dir + str(task_id)+'_'+str(count)+'.jpg')
         count += 1
     logger.info('saved in dir')
+    post_log(task_id,"准备上传图片")
 
     image_list = os.listdir(image_dir)
     # # 上传接口
@@ -92,6 +93,7 @@ def generate_img(rendering_params, task_id):
         requestData), headers=header1)
     logger.info(respon.text)
     logger.info("渲染图片已上传")
+    post_log(task_id,"图片上传完成")
     os.system("""rm -f /content/stable-diffusion-webui/result_image/*""")
 
 
@@ -111,14 +113,17 @@ def main(argv):
             'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0'}
         req = urllib.request.Request(url=argv[0], headers=headers)
         param = demjson.decode(urllib.request.urlopen(req).read())["data"]
+    task_id=argv[1] if len(argv) >= 2 else "160"
+
 
     # 下载需要的模型
+    post_log(task_id,"下载需要的模型")
     models = set()
     for rendering_param in param.get("rendering_params"):
         models.add(rendering_param.get("Model_Name"))
     logger.info("Model_Name: "+str(models))
     downloadModel(models)
-
+    post_log(task_id,"模型下载完成")
     rendering_params_list = (param.get("rendering_params"))
 
     for rendering_params in rendering_params_list:
@@ -136,6 +141,7 @@ def main(argv):
             os.system("cp /content/models/{} /content/stable-diffusion-webui/models/Stable-diffusion/".format(ckptname))
 
             logger.info("启动渲染服务，预计{}s ".format(str(30)))
+            post_log(task_id,"启动渲染服务")
             process = multiprocessing.Process(target=fun1, args=())
             process.start()
             # time.sleep(sleep_time)
@@ -146,16 +152,19 @@ def main(argv):
                 time.sleep(1)
                 count+=1
                 logger.info(str(count))
+            post_log(task_id,"渲染服务已启动")
         else:
             pass
         logger.info("渲染参数: "+str(rendering_params))
         times=2*int(rendering_params.get("Sampling_Steps"))*int(rendering_params.get("Batch_Count"))*int(rendering_params.get("Width"))*int(rendering_params.get("Height"))/(512*512)
         logger.info("相册id {} 开始渲染，预计{}s".format(rendering_params.get("id"),times))
+        post_log(task_id,"相册id {} 开始渲染".format(rendering_params.get("id")))
         process2 = multiprocessing.Process(target=generate_img, args=(rendering_params, param["id"]))
         process2.start()
         process2.join()
         process2.terminate()
-        time.sleep(2)
+        post_log(task_id,"相册id {} 渲染完成".format(rendering_params.get("id")))
+        time.sleep(1)
         # generate_img(rendering_params, param["id"])
 
     process.terminate() #经常无法关闭进程

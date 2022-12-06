@@ -32,9 +32,9 @@ def run_task(task_id):
     if "TRAIN" in task_type:
         os.chdir("""/content/""")
         logger.info("启动训练任务")
-        post_log(task_id,"启动训练任务")
+        # post_log(task_id,"启动训练任务")
         logger.info(param_url)
-        post_log(task_id,param_url)
+        # post_log(task_id,param_url)
         flag=os.system("""python -u ./ai-travel/script/train_model.py {} {} 2>&1|tee -a -i /content/logs/train_log/train_{}_task{}.log""".format(
             param_url, task_id, task_time, task_id))
         if flag==0:

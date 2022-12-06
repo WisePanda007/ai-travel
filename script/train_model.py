@@ -11,6 +11,7 @@ os.environ['MKL_THREADING_LAYER'] = 'GNU'
 from utils.Logger import logger
 
 def main(argv):
+    flag=0
     # 加载参数
     param = demjson.decode_file("ai-travel/config/config_demo.json")
 
@@ -19,7 +20,7 @@ def main(argv):
         'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0'}
         req = urllib.request.Request(url=argv[0], headers=headers)
         param = demjson.decode(urllib.request.urlopen(req).read())
-    task_id=argv[1] if len(argv) >= 2 else 1 
+    task_id=argv[1] if len(argv) >= 2 else "160"
 
     training_param = param["data"]["training_params"]
     original_album_param = param["data"]["original_album"]
@@ -40,4 +41,4 @@ def main(argv):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    flag=main(sys.argv[1:])

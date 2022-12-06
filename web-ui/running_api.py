@@ -164,10 +164,10 @@ def main(argv):
         process2.start()
         process2.join()
         process2.terminate()
-        if process2.exitcode != None or process2.exitcode >0:
-            flag+=1
         post_log(task_id,"相册id {} 渲染完成".format(rendering_params.get("id")))
         time.sleep(1)
+        if process2.exitcode != None and process2.exitcode >0:
+            flag+=1
         # generate_img(rendering_params, param["id"])
 
     process.terminate() #经常无法关闭进程
@@ -176,7 +176,7 @@ def main(argv):
     pids=subprocess.getstatusoutput("""ps -ef | grep "/content/stable-diffusion-webui/webui.py" | grep -v grep | awk '{print $2}'""")[1].split("\n")
     for pid in pids:
         os.system("kill {}".format(pid))
-    return flag
+    sys.exit(flag)
 
 if __name__ == "__main__":
     main(sys.argv[1:])

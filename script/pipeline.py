@@ -67,6 +67,8 @@ def run_task(task_id):
         os.chdir("""/content/stable-diffusion-webui/""")
         flag=os.system("""python -u running_api.py {} {} 2>&1|tee -a -i /content/logs/txt2img_log/txt2img_{}_task{}.log""".format(
             param_url, task_id, task_time, task_id))
+        with open("/content/ai-travel/web-ui/flag.log") as f:
+            flag=int(f.read().strip())
         if flag==0:
             logger.info("txt2img任务成功")
             post_log(task_id,"txt2img任务成功")

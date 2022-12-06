@@ -106,7 +106,8 @@ def downloadModel(models):
         os.system("""coscmd download {} {}""".format(cos_path, "/content/models/"))
 
 def main(argv):
-    flag=0
+    os.system('echo "0" > /content/ai-travel/web-ui/flag.log')
+
     param = demjson.decode_file(
         "/content/ai-travel/config/config_demo.json")["data"]
     if len(argv) >= 1:
@@ -167,7 +168,10 @@ def main(argv):
         post_log(task_id,"相册id {} 渲染完成".format(rendering_params.get("id")))
         time.sleep(1)
         if process2.exitcode != None and process2.exitcode >0:
-            flag+=1
+            os.system('echo "1" > /content/ai-travel/web-ui/flag.log')
+            logger.info("相册id {} 渲染发生错误".format(rendering_params.get("id")))
+            post_log(task_id,"相册id {} 渲染发生错误".format(rendering_params.get("id")))
+            
         # generate_img(rendering_params, param["id"])
 
     process.terminate() #经常无法关闭进程
@@ -176,7 +180,6 @@ def main(argv):
     pids=subprocess.getstatusoutput("""ps -ef | grep "/content/stable-diffusion-webui/webui.py" | grep -v grep | awk '{print $2}'""")[1].split("\n")
     for pid in pids:
         os.system("kill {}".format(pid))
-    sys.exit(flag)
 
 if __name__ == "__main__":
     main(sys.argv[1:])

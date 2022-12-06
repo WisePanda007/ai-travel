@@ -12,11 +12,11 @@ import transformers
 from tqdm import tqdm
 
 transformers.logging.set_verbosity_error()
-from utils.Logger import logger
+from utils.Logger import logger,post_log
 
 # 更新至11.22
 class DreamBooth():
-    def __init__(self, param, original_album_param):
+    def __init__(self, param, original_album_param,task_id):
 
 
         Session_Name = param["Model_Name"]  # @param{type: 'string'}
@@ -68,11 +68,13 @@ class DreamBooth():
                 ".ckpt" if cos_path.rstrip()[-5] != ".ckpt" else cos_path
 
             logger.info("下载旧模型: "+str(cos_path))
+            post_log(task_id,"下载旧模型: "+str(cos_path))
             os.system("""coscmd download {} {}""".format(
                 cos_path, str(SESSION_DIR + "/" + Session_Name + '.ckpt')))
 
         if os.path.exists(str(SESSION_DIR + "/" + Session_Name + '.ckpt')):
             logger.info('加载旧模型')
+            post_log(task_id,"解析旧模型: "+str(cos_path))
             reg(CLASS_DIR)
             os.system("""mkdir -p """ + OUTPUT_DIR)
             os.system(
@@ -82,11 +84,14 @@ class DreamBooth():
                 resume = True
                 os.system("""rm -rf /content/v1-inference.yaml""")
                 logger.info('[1;32mSession loaded.')
+                post_log(task_id,"旧模型解析完毕,启动训练会话")
             else:
                 os.system("""rm -rf /content/v1-inference.yaml""")
                 if not os.path.exists(OUTPUT_DIR + '/unet/diffusion_pytorch_model.bin'):
                     logger.info(
                         '[1;31mConversion error, if the error persists, remove the CKPT file from the current session folder')
+                    post_log(task_id,"训练会话启动失败")
+                    return -1
 
         elif not os.path.exists(str(SESSION_DIR)):
             os.system("""mkdir -p """ + INSTANCE_DIR)
@@ -98,9 +103,12 @@ class DreamBooth():
             #     fdownloadmodel()
             if os.path.exists('/content/stable-diffusion-v1-5/unet/diffusion_pytorch_model.bin'):
                 logger.info('[1;32mSession created, proceed to uploading instance images')
+                post_log(task_id,"启动训练会话")
             else:
                 logger.info(
                     '[1;31mError downloading the model, make sure you have accepted the terms at https://huggingface.co/runwayml/stable-diffusion-v1-5')
+                post_log(task_id,"训练会话启动失败")
+                return -1
 
         if Contains_faces == "Female":
             CLASS_DIR = CLASS_DIR + '/Women'
@@ -121,6 +129,7 @@ class DreamBooth():
         IMAGES_FOLDER_OPTIONAL = os.path.join("/content/original_album/", param["Model_Name"])
         os.system("mkdir -p " + IMAGES_FOLDER_OPTIONAL)
         logger.info("开始下载图片")
+        post_log(task_id,"开始下载训练图片")
         for count, i in enumerate(original_album_param):
             url = i["url"]
             name = i["name"]
@@ -138,6 +147,7 @@ class DreamBooth():
                 pass
 
         logger.info("图片下载完成")
+        post_log(task_id,"训练图片下载完成")
 
         Crop_images = True if str(param["Crop_Images"]).upper(
         ) == "TRUE" else False  # @param{type: 'boolean'}
@@ -153,6 +163,7 @@ class DreamBooth():
                 # os.system(
                 #     'cp -r "{}/." "{}"'.format(IMAGES_FOLDER_OPTIONAL, INSTANCE_DIR))
                 logger.info("开始图像裁剪")
+                post_log(task_id,"开始进行512图像裁剪")
                 for filename in tqdm(os.listdir(IMAGES_FOLDER_OPTIONAL), bar_format='  |{bar:15}| {n_fmt}/{total_fmt} Uploaded'):
                     try:
                         extension = filename.split(".")[1].rstrip("'")
@@ -178,6 +189,7 @@ class DreamBooth():
                     except Exception as e:
                         logger.error(e)
                 logger.info("图像裁剪完成")
+                post_log(task_id,"512图像裁剪完成")
             else:
                 os.system(
                     'cp -r "{}/." "{}"'.format(IMAGES_FOLDER_OPTIONAL, INSTANCE_DIR))
@@ -187,7 +199,7 @@ class DreamBooth():
             os.chdir("""/content""")
             if os.path.exists(INSTANCE_DIR + "/.ipynb_checkpoints"):
                 os.system("""rm -r """ + INSTANCE_DIR + "/.ipynb_checkpoints")
-            logger.info('开始训练模型')
+
 
         os.chdir(SESSION_DIR)
         os.system("""rm -rf instance_images.zip""")
@@ -217,8 +229,10 @@ class DreamBooth():
         if Resume_Training == "RESUME_TRAINING" and os.path.exists(OUTPUT_DIR + '/unet/diffusion_pytorch_model.bin'):
             MODELT_NAME = OUTPUT_DIR
             logger.info('在旧模型的基础上训练新模型')
+            post_log(task_id,"在旧模型的基础上训练新模型")
         elif Resume_Training == "RESUME_TRAINING" and not os.path.exists(OUTPUT_DIR + '/unet/diffusion_pytorch_model.bin'):
             logger.info('旧模型没找到，直接训练新模型')
+            post_log(task_id,"旧模型没找到，直接训练新模型")
             MODELT_NAME = MODEL_NAME
 
         # @markdown ---------------------------
@@ -329,13 +343,16 @@ class DreamBooth():
                              precision, Training_Steps))
 
         if Contains_faces != "No":
-
+            logger.info("训练包含人脸,开始模型训练")
+            post_log(task_id,"训练包含人脸,开始模型训练")
             txtenc_train(Caption, stpsv, stp, MODELT_NAME, INSTANCE_DIR, CLASS_DIR, OUTPUT_DIR, PT, Seed, precision,
                          Training_Steps=stptxt)
             unet_train(Caption, SESSION_DIR, stpsv, stp, MODELT_NAME, INSTANCE_DIR, OUTPUT_DIR, PT, Seed, precision,
                        Training_Steps)
 
         else:
+            logger.info("开始模型训练")
+            post_log(task_id,"开始模型训练")
             os.system("""accelerate launch /content/diffusers/examples/dreambooth/train_dreambooth.py \
             {} \
             {} \
@@ -373,14 +390,19 @@ class DreamBooth():
                         """cp -r '/content/models/{}/tokenizer' {}""".format(INSTANCE_NAME, SESSION_DIR))
                 logger.info("模型训练完成，ckpt模型路径："+str(ckpt_model_path))
                 logger.info("上传模型到腾讯云cos")
+                post_log(task_id,"模型训练完成，上传模型到腾讯云cos")
                 os.system(
                     """coscmd upload {} sd/models/""".format(ckpt_model_path))
-
+                return 0
             else:
                 logger.info("模型训练失败")
+                return -1
 
         else:
             logger.info("模型训练失败")
+            post_log(task_id,"模型训练完成，上传模型到腾讯云cos")
+            return -1
+
 
         def alter(file, old_str, new_str):
             """

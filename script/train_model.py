@@ -19,6 +19,7 @@ def main(argv):
         'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0'}
         req = urllib.request.Request(url=argv[0], headers=headers)
         param = demjson.decode(urllib.request.urlopen(req).read())
+    task_id=argv[1] if len(argv) >= 2 else 1 
 
     training_param = param["data"]["training_params"]
     original_album_param = param["data"]["original_album"]
@@ -35,7 +36,7 @@ def main(argv):
     down=DownloadModel(training_param)
 
     # 模型训练
-    db = DreamBooth(training_param, original_album_param)
+    db = DreamBooth(training_param, original_album_param,task_id)
 
 
 if __name__ == "__main__":
